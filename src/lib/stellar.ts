@@ -11,6 +11,7 @@ import {
   LiquidityPoolAsset,
   Transaction,
 } from '@stellar/stellar-sdk';
+import { AccountAssets } from '@/types';
 
 /**
  * Ultra-aggressive sanitizer: removes all whitespace, hidden characters, 
