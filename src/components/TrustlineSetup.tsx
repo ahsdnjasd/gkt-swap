@@ -81,7 +81,7 @@ export default function TrustlineSetup({ asset, userAddress, onSuccess }: Trustl
         )}
       </button>
 
-      {step !== 'idle' && step !== 'done' && (
+      {step !== 'idle' && step !== 'error' && (
         <div className="mt-4 flex justify-between gap-1">
           {['preparing', 'signing', 'broadcasting'].map((s) => (
             <div
