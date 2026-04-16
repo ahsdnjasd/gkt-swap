@@ -1,0 +1,11 @@
+{
+  "name": "liquidswap-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm run client:dev",
+    "client:install": "npm install --prefix client",
+    "client:dev": "npm run dev --prefix client",
+    "client:build": "npm run build --prefix client",
+    "test:contract": "cargo test"
+  }
+}

@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-glass-bg: rgba(255, 255, 255, 0.1);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+  --color-primary-neon: #a855f7;
+  --color-secondary-neon: #3b82f6;
+}
+
+@layer base {
+  body {
+    @apply m-0 p-0 antialiased;
+    background: radial-gradient(circle at top left, #1e1b4b 0%, #0f172a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.glass-morphism {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.swap-input-container {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.swap-input-container:focus-within {
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 1px var(--color-primary-neon);
+}
