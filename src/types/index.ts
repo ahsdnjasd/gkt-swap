@@ -51,7 +51,7 @@ export interface PriceFeedData {
   price: number;
   tvl: number;
   volume: number;
-  timestamp: Date;
+  timestamp: string;
 }
 
 export interface AccountAssets {

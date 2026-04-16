@@ -1,12 +1,7 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/src/lib/sse.ts
 import { useEffect, useState } from 'react';
 
-export interface PriceFeedData {
-  price: number;
-  tvl: number;
-  volume: number;
-  timestamp: string;
-}
+import { PriceFeedData } from '@/types';
 
 export function usePriceFeed(onUpdate: (data: PriceFeedData) => void): void {
   useEffect(() => {
