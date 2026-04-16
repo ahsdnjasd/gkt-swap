@@ -210,6 +210,18 @@ export async function buildRemoveLiquidityXDR(userPublicKey: string, lpShares: s
 }
 
 /**
+ * Verifies a transaction hash on-chain.
+ */
+export async function verifySwapTx(txHash: string): Promise<{ valid: boolean }> {
+  try {
+    const tx = await server.transactions().transaction(txHash).call();
+    return { valid: !!tx && tx.successful };
+  } catch {
+    return { valid: false };
+  }
+}
+
+/**
  * SUBMISSION BRIDGE
  */
 export async function submitSignedXDR(xdrInput: any): Promise<string> {
