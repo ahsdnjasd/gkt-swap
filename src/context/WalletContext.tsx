@@ -14,7 +14,7 @@ interface WalletContextType {
   connecting: boolean;
   connect: () => Promise<string | null>;
   disconnect: () => void;
-  refreshBalance: () => Promise<void>;
+  refreshBalance: (addr?: string) => Promise<any>;
   pollBalance: (maxAttempts?: number) => void;
 }
 
