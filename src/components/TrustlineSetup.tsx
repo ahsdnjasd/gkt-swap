@@ -88,7 +88,7 @@ export default function TrustlineSetup({ asset, userAddress, onSuccess }: Trustl
               key={s}
               className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
                 step === s ? 'bg-violet animate-pulse' : 
-                (step === 'done' || ['signing', 'broadcasting'].includes(step) && s === 'preparing') || (step === 'broadcasting' && s === 'signing')
+                (['signing', 'broadcasting'].includes(step as any) && s === 'preparing') || (step === 'broadcasting' && s === 'signing')
                 ? 'bg-success' : 'bg-border'
               }`}
             />
