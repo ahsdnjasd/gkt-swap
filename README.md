@@ -5,6 +5,8 @@ LiquidSwap is a next-generation decentralized exchange built on the Stellar Test
 [![CI/CD Pipeline](https://github.com/parth1241/liquidswap/actions/workflows/ci.yml/badge.svg)](https://github.com/parth1241/liquidswap/actions)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge&logo=vercel)](https://liquidswap-iota.vercel.app/)
 
+**Live Demo**: [https://liquidswap-iota.vercel.app/](https://liquidswap-iota.vercel.app/)
+
 ---
 
 ## 📱 Mobile Responsive View
@@ -19,7 +21,7 @@ LiquidSwap is fully optimized for mobile devices, providing a seamless trading e
 
 The protocol is officially deployed and initialized on the Stellar Testnet.
 
-- **LQID Issuer Address**: `GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ`
+- **LQID Issuer Address**: [`GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ`](https://stellar.expert/explorer/testnet/account/GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ)
 - **Asset Code**: `LQID`
 - **Network**: Stellar Testnet (`Test SDF Network ; September 2015`)
 - **Bridge Architecture**: Ultra-Hardened Server-Side Submission (Defense-in-Depth)
