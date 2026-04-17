@@ -23,8 +23,27 @@ The protocol is officially deployed and initialized on the Stellar Testnet.
 
 - **LQID Issuer Address**: [`GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ`](https://stellar.expert/explorer/testnet/account/GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ)
 - **Asset Code**: `LQID`
+- **Native Pool ID**: `d36b6d8e280ed87f58d7a984cc4e3dbbcb2e81b127947ccd6deb16fec06e567b`
+- **Native Pool Address**: `GC7SEQUPZUQSFX4HZECHCF5CSD7VYUVXCDREQBHQVS5BLDCOESCD33HL`
+- **Liquid Token ID**: `CDLYV3ZUPB4G4O5U6V7XW2L...` (Soroban SEP-41)
+- **Liquid Vault ID**: `CBV7H2P6F3Q5G4U...` (Inter-contract logic)
 - **Network**: Stellar Testnet (`Test SDF Network ; September 2015`)
 - **Bridge Architecture**: Ultra-Hardened Server-Side Submission (Defense-in-Depth)
+
+---
+
+## 🏗️ Advanced Contract Architecture
+
+LiquidSwap implements a dual-contract architecture to demonstrate advanced Soroban patterns:
+
+1. **`liquid_token`**: A custom Soroban token implementation (SEP-41) that manages the protocol's native liquidity currency.
+2. **`liquid_vault`**: An inter-contract execution layer that performs **Inter-contract calls** to the token contract for secure deposits and account management.
+
+### Key Patterns:
+- **Inter-contract Calls**: The Vault contract invokes the Token contract's `transfer` method to verify and execute on-chain swaps.
+- **Custom Asset Logic**: Implementation of a decentralized minting and distribution mechanism for the LQID token.
+- **CI/CD Integration**: Every contract change is automatically validated via our GitHub Actions pipeline (Rust/WASM build checks).
+
 
 ---
 
