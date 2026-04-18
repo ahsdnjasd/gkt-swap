@@ -16,6 +16,8 @@ interface WalletContextType {
   disconnect: () => void;
   refreshBalance: (addr?: string) => Promise<any>;
   pollBalance: (maxAttempts?: number) => void;
+  hasLqidTrust: boolean;
+  hasLpoolTrust: boolean;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -25,6 +27,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [xlmBalance, setXlmBalance] = useState(0);
   const [lqidBalance, setLqidBalance] = useState(0);
   const [lpoolBalance, setLpoolBalance] = useState(0);
+  const [hasLqidTrust, setHasLqidTrust] = useState(false);
+  const [hasLpoolTrust, setHasLpoolTrust] = useState(false);
   const [isInstalled, setIsInstalled] = useState(true);
   const [connecting, setConnecting] = useState(true);
 
@@ -36,6 +40,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setXlmBalance(assets.xlm);
         setLqidBalance(assets.lqid);
         setLpoolBalance(assets.lpool);
+        setHasLqidTrust(assets.hasLqidTrust);
+        setHasLpoolTrust(assets.hasLpoolTrust);
         return assets;
       } catch (e) {
         console.error('Balance fetch failed:', e);
@@ -78,6 +84,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setXlmBalance(0);
     setLqidBalance(0);
     setLpoolBalance(0);
+    setHasLqidTrust(false);
+    setHasLpoolTrust(false);
   };
 
   // Initial check
@@ -112,7 +120,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         connect, 
         disconnect, 
         refreshBalance,
-        pollBalance
+        pollBalance,
+        hasLqidTrust,
+        hasLpoolTrust
       }}
     >
       {children}

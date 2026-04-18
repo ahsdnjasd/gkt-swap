@@ -12,6 +12,7 @@ import { useWallet } from '@/context/WalletContext';
 import TokenSelector from './TokenSelector';
 import SlippageSettings from './SlippageSettings';
 import TransactionStatus from './TransactionStatus';
+import TrustlineSetup from './TrustlineSetup';
 
 interface SwapCardProps {
   userAddress: string;
@@ -60,7 +61,9 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
     calculateQuote(fromAmount);
   }, [fromAmount, calculateQuote]);
 
-  const { refreshBalance, pollBalance } = useWallet();
+  const { refreshBalance, pollBalance, hasLqidTrust } = useWallet();
+
+  const showTrustlineRequired = toToken === 'LQID' && !hasLqidTrust && !!userAddress;
 
   const handleFlip = () => {
     const prevFrom = fromToken;
@@ -218,7 +221,7 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
 
       <button
         onClick={handleSwap}
-        disabled={!quote || !userAddress || isProcessing}
+        disabled={!quote || !userAddress || isProcessing || showTrustlineRequired}
         className="w-full mt-8 py-4 bg-gradient-to-r from-cyan to-violet text-white font-display font-black text-lg rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-cyan/20 disabled:opacity-50 disabled:hover:scale-100"
       >
         {isProcessing ? (
@@ -228,6 +231,8 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
           </div>
         ) : !userAddress ? (
           'Connect Wallet to Swap'
+        ) : showTrustlineRequired ? (
+          'Trustline Required'
         ) : !fromAmount || parseFloat(fromAmount) <= 0 ? (
           'Enter Amount'
         ) : (!poolStats || poolStats.xlmReserve === 0) ? (
@@ -236,6 +241,16 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
           'Confirm Swap'
         )}
       </button>
+
+      {showTrustlineRequired && (
+        <div className="mt-6 animate-in fade-in zoom-in duration-300">
+          <TrustlineSetup 
+            asset="LQID" 
+            userAddress={userAddress} 
+            onSuccess={() => refreshBalance()} 
+          />
+        </div>
+      )}
 
       {isProcessing && txSteps.length > 0 && (
         <TransactionStatus steps={txSteps} onClose={() => setIsProcessing(false)} />
