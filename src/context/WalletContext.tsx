@@ -1,7 +1,7 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/src/context/WalletContext.tsx
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { isConnected, requestAccess } from '@stellar/freighter-api';
 import { getAccountAssets } from '@/lib/stellar';
 
