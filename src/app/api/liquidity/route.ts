@@ -1,5 +1,7 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/src/app/api/liquidity/route.ts
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { connectDB } from '@/lib/mongodb';
 import { LPPosition } from '@/models/LPPosition';
 import { Pool } from '@/models/Pool';

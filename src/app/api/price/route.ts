@@ -1,5 +1,7 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/src/app/api/price/route.ts
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { connectDB } from '@/lib/mongodb';
 import { Pool } from '@/models/Pool';
 import { cache } from '@/lib/cache';
