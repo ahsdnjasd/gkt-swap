@@ -1,7 +1,7 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/src/components/SwapCard.tsx
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowDownUp, Info, Loader2 } from 'lucide-react';
 import { Pool, SwapQuote, TxStep } from '@/types';
 import { getSwapOutput, getPriceImpact, getMinimumReceived } from '@/lib/priceEngine';
@@ -29,31 +29,32 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [txSteps, setTxSteps] = useState<TxStep[]>([]);
 
-  const calculateQuote = useCallback(
-    debounce((amount: string) => {
-      if (!poolStats || !amount || parseFloat(amount) <= 0) {
-        setQuote(null);
-        setToAmount(0);
-        return;
-      }
+  const calculateQuote = useMemo(
+    () =>
+      debounce((amount: string) => {
+        if (!poolStats || !amount || parseFloat(amount) <= 0) {
+          setQuote(null);
+          setToAmount(0);
+          return;
+        }
 
-      const input = parseFloat(amount);
-      const inputReserve = fromToken === 'XLM' ? poolStats.xlmReserve : poolStats.lqidReserve;
-      const outputReserve = fromToken === 'XLM' ? poolStats.lqidReserve : poolStats.xlmReserve;
+        const input = parseFloat(amount);
+        const inputReserve = fromToken === 'XLM' ? poolStats.xlmReserve : poolStats.lqidReserve;
+        const outputReserve = fromToken === 'XLM' ? poolStats.lqidReserve : poolStats.xlmReserve;
 
-      const output = getSwapOutput(input, inputReserve, outputReserve);
-      const impact = getPriceImpact(input, inputReserve);
-      const minReceived = getMinimumReceived(output, slippage);
+        const output = getSwapOutput(input, inputReserve, outputReserve);
+        const impact = getPriceImpact(input, inputReserve);
+        const minReceived = getMinimumReceived(output, slippage);
 
-      setToAmount(output);
-      setQuote({
-        inputAmount: input,
-        outputAmount: output,
-        priceImpact: impact,
-        minimumReceived: minReceived,
-        fee: input * 0.003,
-      });
-    }, 300),
+        setToAmount(output);
+        setQuote({
+          inputAmount: input,
+          outputAmount: output,
+          priceImpact: impact,
+          minimumReceived: minReceived,
+          fee: input * 0.003,
+        });
+      }, 300),
     [fromToken, poolStats, slippage]
   );
 

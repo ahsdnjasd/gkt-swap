@@ -32,7 +32,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [isInstalled, setIsInstalled] = useState(true);
   const [connecting, setConnecting] = useState(true);
 
-  const refreshBalance = async (addr?: string) => {
+  const refreshBalance = useCallback(async (addr?: string) => {
     const targetAddr = addr || address;
     if (targetAddr) {
       try {
@@ -47,9 +47,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         console.error('Balance fetch failed:', e);
       }
     }
-  };
+  }, [address]);
 
-  const pollBalance = (maxAttempts = 5) => {
+  const pollBalance = useCallback((maxAttempts = 5) => {
     let attempts = 0;
     const interval = setInterval(async () => {
       attempts++;
@@ -60,9 +60,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         clearInterval(interval);
       }
     }, 2000);
-  };
+  }, [refreshBalance]);
 
-  const connect = async () => {
+  const connect = useCallback(async () => {
     try {
       if (await isConnected()) {
         const { address: addr } = await requestAccess();
@@ -77,16 +77,16 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       console.error('Connection failed:', e);
       return null;
     }
-  };
+  }, [refreshBalance]);
 
-  const disconnect = () => {
+  const disconnect = useCallback(() => {
     setAddress(null);
     setXlmBalance(0);
     setLqidBalance(0);
     setLpoolBalance(0);
     setHasLqidTrust(false);
     setHasLpoolTrust(false);
-  };
+  }, []);
 
   // Initial check
   useEffect(() => {
@@ -106,7 +106,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       }
     };
     init();
-  }, []);
+  }, [refreshBalance]);
 
   return (
     <WalletContext.Provider 

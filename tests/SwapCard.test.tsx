@@ -1,7 +1,16 @@
-// /Users/parthkaran/Documents/claude_projects/liquidswap/tests/SwapCard.test.tsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import SwapCard from '@/components/SwapCard';
+
+jest.mock('@/context/WalletContext', () => ({
+  useWallet: () => ({
+    refreshBalance: jest.fn(),
+    pollBalance: jest.fn(),
+    hasLqidTrust: true,
+    address: 'GABC...',
+  })
+}));
 
 jest.mock('@stellar/freighter-api', () => ({
   isConnected: jest.fn().mockResolvedValue(false),

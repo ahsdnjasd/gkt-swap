@@ -1,6 +1,7 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/tests/PoolStats.test.tsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import PoolStats from '@/components/PoolStats';
 
 describe('PoolStats', () => {
