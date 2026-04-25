@@ -25,28 +25,26 @@ GKTSwap provides an ultra-premium, light-themed glassmorphic interface designed 
 
 The protocol is officially deployed and initialized on the Stellar Testnet.
 
-- **GKT Issuer Address**: [`GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ`](https://stellar.expert/explorer/testnet/account/GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ)
-- **Asset Code**: `GKT`
-- **Native Pool ID**: `d36b6d8e280ed87f58d7a984cc4e3dbbcb2e81b127947ccd6deb16fec06e567b`
-- **Native Pool Address**: `GC7SEQUPZUQSFX4HZECHCF5CSD7VYUVXCDREQBHQVS5BLDCOESCD33HL`
-- **Liquid Token ID**: `CDLYV3ZUPB4G4O5U6V7XW2L...` (Soroban SEP-41)
-- **Liquid Vault ID**: `CBV7H2P6F3Q5G4U...` (Inter-contract logic)
+- **Liquid Token ID**: `[INSERT_FULL_TOKEN_ID_HERE]` (Soroban SEP-41)
+- **Liquid Vault ID**: `[INSERT_FULL_VAULT_ID_HERE]` (Inter-contract logic)
 - **Network**: Stellar Testnet (`Test SDF Network ; September 2015`)
 - **Bridge Architecture**: Ultra-Hardened Server-Side Submission (Defense-in-Depth)
 
 ---
 
-## 🏗️ Advanced Contract Architecture
+## 📜 Soroban Smart Contracts
 
-GKTSwap implements a dual-contract architecture to demonstrate advanced Soroban patterns:
+The project includes production-ready Soroban smart contracts located in the `/contracts` directory:
 
-1. **`liquid_token`**: A custom Soroban token implementation (SEP-41) that manages the protocol's native liquidity currency.
-2. **`liquid_vault`**: An inter-contract execution layer that performs **Inter-contract calls** to the token contract for secure deposits and account management.
+### 1. Liquid Token (`/contracts/liquid_token`)
+A custom **SEP-41 compliant** token contract that manages the protocol's native GKT liquidity.
+- **Features**: Decentralized minting, administrative controls, and optimized storage patterns.
 
-### Key Patterns:
-- **Inter-contract Calls**: The Vault contract invokes the Token contract's `transfer` method to verify and execute on-chain swaps.
-- **Custom Asset Logic**: Implementation of a decentralized minting and distribution mechanism for the GKT token.
-- **CI/CD Integration**: Every contract change is automatically validated via our GitHub Actions pipeline (Rust/WASM build checks).
+### 2. Liquid Vault (`/contracts/liquid_vault`)
+A high-level execution layer that handles inter-contract calls for secure asset management.
+- **Logic**: Implements secure `transfer` and `deposit` patterns by communicating directly with the `liquid_token` contract.
+
+---
 
 
 ---
