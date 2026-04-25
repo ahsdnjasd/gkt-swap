@@ -8,7 +8,7 @@ import { getAccountAssets } from '@/lib/stellar';
 interface WalletContextType {
   address: string | null;
   xlmBalance: number;
-  gktBalance: number;
+  lqidBalance: number;
   lpoolBalance: number;
   isInstalled: boolean;
   connecting: boolean;
@@ -16,7 +16,7 @@ interface WalletContextType {
   disconnect: () => void;
   refreshBalance: (addr?: string) => Promise<any>;
   pollBalance: (maxAttempts?: number) => void;
-  hasGktTrust: boolean;
+  hasLqidTrust: boolean;
   hasLpoolTrust: boolean;
 }
 
@@ -25,9 +25,9 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [address, setAddress] = useState<string | null>(null);
   const [xlmBalance, setXlmBalance] = useState(0);
-  const [gktBalance, setGktBalance] = useState(0);
+  const [lqidBalance, setLqidBalance] = useState(0);
   const [lpoolBalance, setLpoolBalance] = useState(0);
-  const [hasGktTrust, setHasGktTrust] = useState(false);
+  const [hasLqidTrust, setHasLqidTrust] = useState(false);
   const [hasLpoolTrust, setHasLpoolTrust] = useState(false);
   const [isInstalled, setIsInstalled] = useState(true);
   const [connecting, setConnecting] = useState(true);
@@ -38,9 +38,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       try {
         const assets = await getAccountAssets(targetAddr);
         setXlmBalance(assets.xlm);
-        setGktBalance(assets.gkt);
+        setLqidBalance(assets.lqid);
         setLpoolBalance(assets.lpool);
-        setHasGktTrust(assets.hasGktTrust);
+        setHasLqidTrust(assets.hasLqidTrust);
         setHasLpoolTrust(assets.hasLpoolTrust);
         return assets;
       } catch (e) {
@@ -82,9 +82,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const disconnect = useCallback(() => {
     setAddress(null);
     setXlmBalance(0);
-    setGktBalance(0);
+    setLqidBalance(0);
     setLpoolBalance(0);
-    setHasGktTrust(false);
+    setHasLqidTrust(false);
     setHasLpoolTrust(false);
   }, []);
 
@@ -113,7 +113,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       value={{ 
         address, 
         xlmBalance, 
-        gktBalance,
+        lqidBalance,
         lpoolBalance,
         isInstalled, 
         connecting,
@@ -121,7 +121,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         disconnect, 
         refreshBalance,
         pollBalance,
-        hasGktTrust,
+        hasLqidTrust,
         hasLpoolTrust
       }}
     >

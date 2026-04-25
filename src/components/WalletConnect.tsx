@@ -7,7 +7,7 @@ import { truncateAddress } from '@/lib/utils';
 import { useWallet } from '@/context/WalletContext';
 
 export default function WalletConnect() {
-  const { address, xlmBalance, gktBalance, lpoolBalance, isInstalled, connecting, connect, disconnect } = useWallet();
+  const { address, xlmBalance, lqidBalance, lpoolBalance, isInstalled, connecting, connect, disconnect } = useWallet();
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = () => {
@@ -58,7 +58,7 @@ export default function WalletConnect() {
           {xlmBalance.toLocaleString()} <span className="text-[8px] opacity-70">XLM</span>
         </span>
         <span className="text-[10px] items-center gap-1 font-mono font-bold text-primary flex whitespace-nowrap">
-          {gktBalance.toLocaleString()} <span className="text-[8px] opacity-70">GKT</span>
+          {lqidBalance.toLocaleString()} <span className="text-[8px] opacity-70">LQID</span>
         </span>
       </div>
 

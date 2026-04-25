@@ -21,8 +21,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'GKTSwap | DEX on Stellar',
-  description: 'The fastest, most fluid DEX on Stellar Testnet. Swap XLM and GKT with ease.',
+  title: 'LQIDSwap | DEX on Stellar',
+  description: 'The fastest, most fluid DEX on Stellar Testnet. Swap XLM and LQID with ease.',
 };
 
 export default function RootLayout({
@@ -41,7 +41,7 @@ export default function RootLayout({
             <div className="max-w-[1400px] mx-auto flex justify-between items-center">
               <Link href="/" className="flex items-center gap-2 group">
                 <span className="text-2xl text-primary font-display font-black group-hover:drop-shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all">
-                  ⬡ GKTSwap
+                  ⬡ LQIDSwap
                 </span>
               </Link>
 

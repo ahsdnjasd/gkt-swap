@@ -74,7 +74,7 @@ export default function LandingPage() {
             </span>
           </h1>
           <p className="text-xl text-muted max-w-lg leading-relaxed font-medium">
-            Swap XLM ↔ GKT with zero slippage anxiety. 
+            Swap XLM ↔ LQID with zero slippage anxiety. 
             Deep liquidity, institutional-grade security, and instant settlement.
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
@@ -106,7 +106,7 @@ export default function LandingPage() {
                 </defs>
                 <g filter="url(#goo)">
                   <circle cx="150" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.xlmReserve / pool.tvlXLM) * 100)) : 60} fill="#22c55e" className="animate-blob" />
-                  <circle cx="250" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.gktReserve / pool.tvlXLM) * 100)) : 60} fill="#16a34a" className="animate-blob [animation-delay:2s]" />
+                  <circle cx="250" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.lqidReserve / pool.tvlXLM) * 100)) : 60} fill="#16a34a" className="animate-blob [animation-delay:2s]" />
                 </g>
               </svg>
             </div>
@@ -116,8 +116,8 @@ export default function LandingPage() {
                 <span className="text-[10px] text-muted font-bold uppercase tracking-widest">XLM Locked</span>
               </div>
               <div className="text-center">
-                <span className="block text-primary-dark font-mono font-bold text-lg">{pool?.gktReserve ? (pool.gktReserve / 1000).toFixed(1) : '0.0'}k</span>
-                <span className="text-[10px] text-muted font-bold uppercase tracking-widest">GKT Locked</span>
+                <span className="block text-primary-dark font-mono font-bold text-lg">{pool?.lqidReserve ? (pool.lqidReserve / 1000).toFixed(1) : '0.0'}k</span>
+                <span className="text-[10px] text-muted font-bold uppercase tracking-widest">LQID Locked</span>
               </div>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function LandingPage() {
             View Full Analytics <ChevronRight size={16} />
           </Link>
         </div>
-        <PoolStats pool={pool} price={pool ? pool.xlmReserve / pool.gktReserve : 0} loading={loading} />
+        <PoolStats pool={pool} price={pool ? pool.xlmReserve / pool.lqidReserve : 0} loading={loading} />
       </section>
 
       {/* History Section */}

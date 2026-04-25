@@ -12,15 +12,15 @@ export async function POST(req: Request) {
 
   await connectDB();
   const body = await req.json();
-  const { poolId, initialXLM, initialGKT } = body;
+  const { poolId, initialXLM, initialLQID } = body;
 
   const pool = await Pool.findOneAndUpdate(
     { poolId },
     {
       poolId,
       xlmReserve: parseFloat(initialXLM),
-      gktReserve: parseFloat(initialGKT),
-      totalLPShares: Math.sqrt(parseFloat(initialXLM) * parseFloat(initialGKT)),
+      lqidReserve: parseFloat(initialLQID),
+      totalLPShares: Math.sqrt(parseFloat(initialXLM) * parseFloat(initialLQID)),
       tvlXLM: parseFloat(initialXLM) * 2,
       lastUpdated: new Date(),
     },

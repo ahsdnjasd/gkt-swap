@@ -38,7 +38,7 @@ export default function PoolPage() {
     if (pool) navigator.clipboard.writeText(pool.poolId);
   };
 
-  const xlmRatio = pool ? (pool.xlmReserve / (pool.xlmReserve + pool.gktReserve)) * 100 : 50;
+  const xlmRatio = pool ? (pool.xlmReserve / (pool.xlmReserve + pool.lqidReserve)) * 100 : 50;
 
   return (
     <div className="space-y-12 pb-20">
@@ -48,7 +48,7 @@ export default function PoolPage() {
             <Activity size={12} className="animate-pulse" />
             Live Analytics
           </div>
-          <h1 className="text-5xl font-display font-black text-foreground tracking-tighter uppercase">XLM/GKT Pool</h1>
+          <h1 className="text-5xl font-display font-black text-foreground tracking-tighter uppercase">XLM/LQID Pool</h1>
         </div>
         
         {pool && (
@@ -62,7 +62,7 @@ export default function PoolPage() {
         )}
       </div>
 
-      <PoolStats pool={pool} price={pool ? pool.xlmReserve / pool.gktReserve : 0} loading={loading} />
+      <PoolStats pool={pool} price={pool ? pool.xlmReserve / pool.lqidReserve : 0} loading={loading} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Reserve Ratio Card */}
@@ -91,8 +91,8 @@ export default function PoolPage() {
 
             <div className="flex items-start justify-between">
               <div className="flex flex-col">
-                <span className="text-muted text-[10px] uppercase font-bold tracking-widest mb-1">GKT Inventory</span>
-                <span className="text-3xl font-mono font-black text-foreground">{pool ? formatToken(pool.gktReserve) : '---'}</span>
+                <span className="text-muted text-[10px] uppercase font-bold tracking-widest mb-1">LQID Inventory</span>
+                <span className="text-3xl font-mono font-black text-foreground">{pool ? formatToken(pool.lqidReserve) : '---'}</span>
               </div>
               <span className="text-primary-dark font-mono font-bold text-xl">{formatPercent(100 - xlmRatio)}</span>
             </div>

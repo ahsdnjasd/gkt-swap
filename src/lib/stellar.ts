@@ -23,13 +23,13 @@ export function sanitize(val: string | undefined): string {
 }
 
 // ASSET HELPERS
-export const getGktAsset = () => {
-  const issuer = sanitize(process.env.NEXT_PUBLIC_GKT_ISSUER || 'GBPIJUJONMC53VKN6XRCSXK4XT4X5QSMNFMIRB4WYJKFYV4T3QD6ZD4Z');
-  return new Asset('GKT', issuer);
+export const getLqidAsset = () => {
+  const issuer = sanitize(process.env.NEXT_PUBLIC_LQID_ISSUER || 'GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ');
+  return new Asset('LQID', issuer);
 };
 
 export const getLpoolAsset = () => {
-  return new LiquidityPoolAsset(Asset.native(), getGktAsset(), LiquidityPoolFeeV18);
+  return new LiquidityPoolAsset(Asset.native(), getLqidAsset(), LiquidityPoolFeeV18);
 };
 
 // GLOBAL NETWORK CONFIG - HARDCODED TESTNET
@@ -38,11 +38,11 @@ export const HORIZON_URL = 'https://horizon-testnet.stellar.org';
 export const server = new Horizon.Server(HORIZON_URL);
 
 /**
- * Deterministically computes the Liquidity Pool ID for XLM/GKT.
+ * Deterministically computes the Liquidity Pool ID for XLM/LQID.
  */
 export function getCurrentPoolId(): string {
   const assetA = Asset.native();
-  const assetB = getGktAsset();
+  const assetB = getLqidAsset();
   const [first, second] = [assetA, assetB].sort((a, b) => {
     if (a.isNative()) return -1;
     if (b.isNative()) return 1;
@@ -75,15 +75,15 @@ export async function getPoolInfo(poolId: string) {
     const pool = await server.liquidityPools().liquidityPoolId(poolId).call();
     const reserves = pool.reserves;
     const xlmRes = reserves.find(r => r.asset === 'native');
-    const gktRes = reserves.find(r => r.asset.includes('GKT'));
+    const lqidRes = reserves.find(r => r.asset.includes('LQID'));
     
     return {
       xlmReserve: parseFloat(xlmRes?.amount || '0'),
-      gktReserve: parseFloat(gktRes?.amount || '0'),
+      lqidReserve: parseFloat(lqidRes?.amount || '0'),
       totalShares: parseFloat(pool.total_shares),
     };
   } catch (error) {
-    return { xlmReserve: 0, gktReserve: 0, totalShares: 0 };
+    return { xlmReserve: 0, lqidReserve: 0, totalShares: 0 };
   }
 }
 
@@ -97,11 +97,11 @@ export async function getAccountAssets(userPublicKey: string): Promise<AccountAs
 
     const xlm = parseFloat(balances.find((b: any) => b.asset_type === 'native')?.balance || '0');
     
-    const gktEntry = balances.find(
-      (b: any) => b.asset_code === 'GKT' && b.asset_issuer === process.env.NEXT_PUBLIC_GKT_ISSUER
+    const lqidEntry = balances.find(
+      (b: any) => b.asset_code === 'LQID' && b.asset_issuer === process.env.NEXT_PUBLIC_LQID_ISSUER
     );
-    const gkt = parseFloat(gktEntry?.balance || '0');
-    const hasGktTrust = !!gktEntry;
+    const lqid = parseFloat(lqidEntry?.balance || '0');
+    const hasLqidTrust = !!lqidEntry;
 
     const poolId = getCurrentPoolId();
     const lpoolEntry = balances.find(
@@ -110,9 +110,9 @@ export async function getAccountAssets(userPublicKey: string): Promise<AccountAs
     const lpool = parseFloat(lpoolEntry?.balance || '0');
     const hasLpoolTrust = !!lpoolEntry;
 
-    return { xlm, gkt, lpool, hasGktTrust, hasLpoolTrust };
+    return { xlm, lqid, lpool, hasLqidTrust, hasLpoolTrust };
   } catch {
-    return { xlm: 0, gkt: 0, lpool: 0, hasGktTrust: false, hasLpoolTrust: false };
+    return { xlm: 0, lqid: 0, lpool: 0, hasLqidTrust: false, hasLpoolTrust: false };
   }
 }
 
@@ -131,9 +131,9 @@ export async function getNetworkFee(): Promise<string> {
 /**
  * BUILDERS - ALL HARDCODED TO TESTNET
  */
-export async function createTrustlineXDR(userPublicKey: string, asset: 'GKT' | 'LPOOL'): Promise<string> {
+export async function createTrustlineXDR(userPublicKey: string, asset: 'LQID' | 'LPOOL'): Promise<string> {
   const account = await server.loadAccount(userPublicKey);
-  const targetAsset = asset === 'GKT' ? getGktAsset() : getLpoolAsset();
+  const targetAsset = asset === 'LQID' ? getLqidAsset() : getLpoolAsset();
 
   const transaction = new TransactionBuilder(account, {
     fee: await getNetworkFee(),
@@ -147,10 +147,10 @@ export async function createTrustlineXDR(userPublicKey: string, asset: 'GKT' | '
   return tx.toXDR();
 }
 
-export async function buildSwapXDR(userPublicKey: string, fromToken: 'XLM' | 'GKT', toAmount: string, maxSend: string): Promise<string> {
+export async function buildSwapXDR(userPublicKey: string, fromToken: 'XLM' | 'LQID', toAmount: string, maxSend: string): Promise<string> {
   const account = await server.loadAccount(userPublicKey);
-  const sendAsset = fromToken === 'XLM' ? Asset.native() : getGktAsset();
-  const destAsset = fromToken === 'XLM' ? getGktAsset() : Asset.native();
+  const sendAsset = fromToken === 'XLM' ? Asset.native() : getLqidAsset();
+  const destAsset = fromToken === 'XLM' ? getLqidAsset() : Asset.native();
 
   const transaction = new TransactionBuilder(account, {
     fee: await getNetworkFee(),
@@ -169,7 +169,7 @@ export async function buildSwapXDR(userPublicKey: string, fromToken: 'XLM' | 'GK
   return transaction.build().toXDR();
 }
 
-export async function buildAddLiquidityXDR(userPublicKey: string, xlmAmount: string, gktAmount: string, minPrice: string, maxPrice: string): Promise<string> {
+export async function buildAddLiquidityXDR(userPublicKey: string, xlmAmount: string, lqidAmount: string, minPrice: string, maxPrice: string): Promise<string> {
   const account = await server.loadAccount(userPublicKey);
   const poolId = getCurrentPoolId();
 
@@ -181,7 +181,7 @@ export async function buildAddLiquidityXDR(userPublicKey: string, xlmAmount: str
     .addOperation(Operation.liquidityPoolDeposit({
       liquidityPoolId: poolId,
       maxAmountA: xlmAmount,
-      maxAmountB: gktAmount,
+      maxAmountB: lqidAmount,
       minPrice,
       maxPrice,
     }))
@@ -190,7 +190,7 @@ export async function buildAddLiquidityXDR(userPublicKey: string, xlmAmount: str
   return transaction.build().toXDR();
 }
 
-export async function buildRemoveLiquidityXDR(userPublicKey: string, lpShares: string, minXLM: string, minGKT: string): Promise<string> {
+export async function buildRemoveLiquidityXDR(userPublicKey: string, lpShares: string, minXLM: string, minLQID: string): Promise<string> {
   const account = await server.loadAccount(userPublicKey);
   const poolId = getCurrentPoolId();
 
@@ -202,7 +202,7 @@ export async function buildRemoveLiquidityXDR(userPublicKey: string, lpShares: s
       liquidityPoolId: poolId,
       amount: lpShares,
       minAmountA: minXLM,
-      minAmountB: minGKT,
+      minAmountB: minLQID,
     }))
     .setTimeout(60);
 

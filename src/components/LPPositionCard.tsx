@@ -16,11 +16,11 @@ export default function LPPositionCard({ position, poolStats }: LPPositionCardPr
   if (!position || position.lpShares === 0) return null;
 
   const poolPercentage = (position.lpShares / poolStats.totalLPShares) * 100;
-  const { xlm, gkt } = getPositionValue(
+  const { xlm, lqid } = getPositionValue(
     position.lpShares,
     poolStats.totalLPShares,
     poolStats.xlmReserve,
-    poolStats.gktReserve
+    poolStats.lqidReserve
   );
 
   return (
@@ -53,13 +53,13 @@ export default function LPPositionCard({ position, poolStats }: LPPositionCardPr
           <p className="text-muted/60 text-[10px] font-mono mt-1">Staged in liquidity</p>
         </div>
 
-        {/* GKT Value */}
+        {/* LQID Value */}
         <div className="bg-green-50/40 border border-green-100 p-5 rounded-3xl group hover:border-primary-dark/30 transition-all">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-primary-dark" />
-            <span className="text-muted text-[10px] uppercase font-bold tracking-widest">GKT Value</span>
+            <span className="text-muted text-[10px] uppercase font-bold tracking-widest">LQID Value</span>
           </div>
-          <p className="text-foreground font-mono text-xl font-bold">{formatToken(gkt)}</p>
+          <p className="text-foreground font-mono text-xl font-bold">{formatToken(lqid)}</p>
           <p className="text-muted/60 text-[10px] font-mono mt-1">Staged in liquidity</p>
         </div>
       </div>

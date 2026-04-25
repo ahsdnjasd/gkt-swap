@@ -5,8 +5,8 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 interface TokenSelectorProps {
-  value: 'XLM' | 'GKT';
-  onChange: (token: 'XLM' | 'GKT') => void;
+  value: 'XLM' | 'LQID';
+  onChange: (token: 'XLM' | 'LQID') => void;
   disabled?: boolean;
 }
 
@@ -15,7 +15,7 @@ export default function TokenSelector({ value, onChange, disabled }: TokenSelect
 
   const tokens = [
     { code: 'XLM', color: 'bg-primary', iconColor: 'text-primary' },
-    { code: 'GKT', color: 'bg-primary-dark', iconColor: 'text-primary-dark' },
+    { code: 'LQID', color: 'bg-primary-dark', iconColor: 'text-primary-dark' },
   ] as const;
 
   return (

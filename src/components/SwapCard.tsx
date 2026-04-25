@@ -20,8 +20,8 @@ interface SwapCardProps {
 }
 
 export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
-  const [fromToken, setFromToken] = useState<'XLM' | 'GKT'>('XLM');
-  const [toToken, setToToken] = useState<'XLM' | 'GKT'>('GKT');
+  const [fromToken, setFromToken] = useState<'XLM' | 'LQID'>('XLM');
+  const [toToken, setToToken] = useState<'XLM' | 'LQID'>('LQID');
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState<number>(0);
   const [quote, setQuote] = useState<SwapQuote | null>(null);
@@ -39,8 +39,8 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
         }
 
         const input = parseFloat(amount);
-        const inputReserve = fromToken === 'XLM' ? poolStats.xlmReserve : poolStats.gktReserve;
-        const outputReserve = fromToken === 'XLM' ? poolStats.gktReserve : poolStats.xlmReserve;
+        const inputReserve = fromToken === 'XLM' ? poolStats.xlmReserve : poolStats.lqidReserve;
+        const outputReserve = fromToken === 'XLM' ? poolStats.lqidReserve : poolStats.xlmReserve;
 
         const output = getSwapOutput(input, inputReserve, outputReserve);
         const impact = getPriceImpact(input, inputReserve);
@@ -62,9 +62,9 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
     calculateQuote(fromAmount);
   }, [fromAmount, calculateQuote]);
 
-  const { refreshBalance, pollBalance, hasGktTrust } = useWallet();
+  const { refreshBalance, pollBalance, hasLqidTrust } = useWallet();
 
-  const showTrustlineRequired = toToken === 'GKT' && !hasGktTrust && !!userAddress;
+  const showTrustlineRequired = toToken === 'LQID' && !hasLqidTrust && !!userAddress;
 
   const handleFlip = () => {
     const prevFrom = fromToken;
@@ -75,9 +75,9 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
     setQuote(null);
   };
 
-  const handleFromTokenChange = (token: 'XLM' | 'GKT') => {
+  const handleFromTokenChange = (token: 'XLM' | 'LQID') => {
     setFromToken(token);
-    setToToken(token === 'XLM' ? 'GKT' : 'XLM');
+    setToToken(token === 'XLM' ? 'LQID' : 'XLM');
     setFromAmount('');
     setQuote(null);
   };
@@ -246,7 +246,7 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
       {showTrustlineRequired && (
         <div className="mt-6 animate-in fade-in zoom-in duration-300">
           <TrustlineSetup 
-            asset="GKT" 
+            asset="LQID" 
             userAddress={userAddress} 
             onSuccess={() => refreshBalance()} 
           />

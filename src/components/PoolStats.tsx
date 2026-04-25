@@ -40,7 +40,7 @@ export default function PoolStats({ pool, price, loading }: PoolStatsProps) {
       borderColor: 'border-primary-dark/20',
     },
     {
-      label: '$GKT Price',
+      label: '$LQID Price',
       value: `${formatToken(price, 4)} XLM`,
       icon: <TrendingUp className="text-success" size={20} />,
       gradient: 'from-success/10 to-transparent',

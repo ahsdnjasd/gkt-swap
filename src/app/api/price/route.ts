@@ -19,12 +19,12 @@ export async function GET() {
     return NextResponse.json({ error: 'Pool not found' }, { status: 404 });
   }
 
-  const price = pool.xlmReserve / pool.gktReserve;
+  const price = pool.xlmReserve / pool.lqidReserve;
 
   return NextResponse.json({
     price,
     xlmReserve: pool.xlmReserve,
-    gktReserve: pool.gktReserve,
+    lqidReserve: pool.lqidReserve,
     timestamp: Date.now(),
   });
 }

@@ -14,7 +14,7 @@ export default function LiquidityPage() {
   const { address } = useWallet();
   const [pool, setPool] = useState<Pool | null>(null);
   const [position, setPosition] = useState<LPPosition | null>(null);
-  const [needsGktTrustline, setNeedsLqidTrustline] = useState(false);
+  const [needsLqidTrustline, setNeedsLqidTrustline] = useState(false);
   const [needsLpoolTrustline, setNeedsLpoolTrustline] = useState(false);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function LiquidityPage() {
 
         // Check trustlines
         const assets = await getAccountAssets(address);
-        setNeedsLqidTrustline(assets.gkt === 0);
+        setNeedsLqidTrustline(assets.lqid === 0);
         setNeedsLpoolTrustline(assets.lpool === 0);
       }
     };
@@ -57,8 +57,8 @@ export default function LiquidityPage() {
         </div>
       </div>
 
-      {address && needsGktTrustline && (
-        <TrustlineSetup asset="GKT" userAddress={address} onSuccess={() => setNeedsLqidTrustline(false)} />
+      {address && needsLqidTrustline && (
+        <TrustlineSetup asset="LQID" userAddress={address} onSuccess={() => setNeedsLqidTrustline(false)} />
       )}
 
       {address && needsLpoolTrustline && (
@@ -83,8 +83,8 @@ export default function LiquidityPage() {
                  </div>
                </div>
                <div className="space-y-1">
-                 <span className="text-muted text-[10px] uppercase font-bold tracking-[0.2em]">GKT Locked</span>
-                 <p className="text-2xl font-mono font-black text-foreground">{pool ? formatToken(pool.gktReserve) : '---'}</p>
+                 <span className="text-muted text-[10px] uppercase font-bold tracking-[0.2em]">LQID Locked</span>
+                 <p className="text-2xl font-mono font-black text-foreground">{pool ? formatToken(pool.lqidReserve) : '---'}</p>
                  <div className="h-1.5 w-full bg-green-100 rounded-full overflow-hidden">
                     <div className="h-full bg-primary-dark w-full opacity-50" />
                  </div>
@@ -110,7 +110,7 @@ export default function LiquidityPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { title: 'Add Assets', desc: 'Deposit equal values of XLM and GKT into the pool.', icon: <Droplets className="text-primary" /> },
+                { title: 'Add Assets', desc: 'Deposit equal values of XLM and LQID into the pool.', icon: <Droplets className="text-primary" /> },
                 { title: 'Earn Shares', desc: 'Receive LPOOL shares representing your stake.', icon: <Layers className="text-primary-dark" /> },
                 { title: 'Collect Fees', desc: 'Trading fees are automatically added to the pool.', icon: <ShieldCheck className="text-success" /> },
               ].map((step, idx) => (

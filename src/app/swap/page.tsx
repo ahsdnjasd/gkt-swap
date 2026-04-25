@@ -35,7 +35,7 @@ export default function SwapPage() {
   useEffect(() => {
     if (address) {
       getAccountAssets(address).then(assets => {
-        if (assets.gkt === 0) {
+        if (assets.lqid === 0) {
           setNeedsTrustline(true);
         } else {
           setNeedsTrustline(false);
@@ -53,7 +53,7 @@ export default function SwapPage() {
   const range = maxPrice - minPrice || 1;
   const polylinePoints = pricePoints.map((p, i) => `${(i / (pricePoints.length - 1)) * 100},${100 - ((p - minPrice) / range) * 100}`).join(' ');
 
-  const currentPrice = pool ? pool.xlmReserve / pool.gktReserve : 0;
+  const currentPrice = pool ? pool.xlmReserve / pool.lqidReserve : 0;
   const priceChange = swaps.length > 2 ? ((currentPrice - (swaps[1].fromAmount / swaps[1].toAmount)) / currentPrice) * 100 : 0;
 
   return (
@@ -67,7 +67,7 @@ export default function SwapPage() {
         {pool && (
           <div className="glass px-6 py-3 rounded-2xl flex items-center gap-6">
             <div className="flex flex-col">
-              <span className="text-[10px] text-muted font-bold uppercase tracking-widest">GKT Price</span>
+              <span className="text-[10px] text-muted font-bold uppercase tracking-widest">LQID Price</span>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-mono font-bold text-foreground">{currentPrice.toFixed(4)} XLM</span>
                 <span className={`text-[10px] font-mono font-bold flex items-center gap-0.5 ${priceChange >= 0 ? 'text-success' : 'text-danger'}`}>
@@ -81,7 +81,7 @@ export default function SwapPage() {
       </div>
 
       {address && needsTrustline && (
-        <TrustlineSetup asset="GKT" userAddress={address} onSuccess={() => setNeedsTrustline(false)} />
+        <TrustlineSetup asset="LQID" userAddress={address} onSuccess={() => setNeedsTrustline(false)} />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -133,7 +133,7 @@ export default function SwapPage() {
           
           <div className="mt-8 bg-primary/5 border border-primary/15 p-6 rounded-3xl">
             <h4 className="text-primary font-display font-bold mb-2 flex items-center gap-2">
-              GKTSwap AMM <Zap size={14} />
+              LQIDSwap AMM <Zap size={14} />
             </h4>
             <p className="text-xs text-muted leading-relaxed">
               Our automated market maker ensures you always get the best price by balancing reserves 

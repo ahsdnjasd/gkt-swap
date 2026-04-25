@@ -23,20 +23,20 @@ export async function GET(req: Request) {
   const position = await LPPosition.findOne({ userAddress: address });
   if (position) cache.set(cacheKey, position, 60);
 
-  return NextResponse.json(position || { lpShares: 0, xlmDeposited: 0, gktDeposited: 0 });
+  return NextResponse.json(position || { lpShares: 0, xlmDeposited: 0, lqidDeposited: 0 });
 }
 
 export async function POST(req: Request) {
   await connectDB();
   const body = await req.json();
-  const { userAddress, action, xlmAmount, gktAmount, lpShares, txHash } = body;
+  const { userAddress, action, xlmAmount, lqidAmount, lpShares, txHash } = body;
 
   const update = action === 'add' 
     ? {
         $inc: {
           lpShares: parseFloat(lpShares),
           xlmDeposited: parseFloat(xlmAmount),
-          gktDeposited: parseFloat(gktAmount),
+          lqidDeposited: parseFloat(lqidAmount),
         },
         $set: { lastUpdated: new Date() },
         $setOnInsert: { entryTimestamp: new Date() }
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         $inc: {
           lpShares: -parseFloat(lpShares),
           xlmDeposited: -parseFloat(xlmAmount),
-          gktDeposited: -parseFloat(gktAmount),
+          lqidDeposited: -parseFloat(lqidAmount),
         },
         $set: { lastUpdated: new Date() }
       };
@@ -58,8 +58,8 @@ export async function POST(req: Request) {
 
   // Update Pool reserves
   const poolUpdate = action === 'add'
-    ? { $inc: { xlmReserve: parseFloat(xlmAmount), gktReserve: parseFloat(gktAmount), totalLPShares: parseFloat(lpShares) } }
-    : { $inc: { xlmReserve: -parseFloat(xlmAmount), gktReserve: -parseFloat(gktAmount), totalLPShares: -parseFloat(lpShares) } };
+    ? { $inc: { xlmReserve: parseFloat(xlmAmount), lqidReserve: parseFloat(lqidAmount), totalLPShares: parseFloat(lpShares) } }
+    : { $inc: { xlmReserve: -parseFloat(xlmAmount), lqidReserve: -parseFloat(lqidAmount), totalLPShares: -parseFloat(lpShares) } };
 
   await Pool.findOneAndUpdate(
     { poolId: process.env.NEXT_PUBLIC_POOL_ID },

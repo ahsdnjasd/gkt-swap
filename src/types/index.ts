@@ -1,6 +1,6 @@
 // /Users/parthkaran/Documents/claude_projects/liquidswap/src/types/index.ts
 
-export type TokenCode = 'XLM' | 'GKT' | 'LPOOL';
+export type TokenCode = 'XLM' | 'LQID' | 'LPOOL';
 
 export interface Token {
   code: TokenCode;
@@ -10,7 +10,7 @@ export interface Token {
 export interface Pool {
   poolId: string;
   xlmReserve: number;
-  gktReserve: number;
+  lqidReserve: number;
   totalLPShares: number;
   volume24h: number;
   fees24h: number;
@@ -34,7 +34,7 @@ export interface LPPosition {
   userAddress: string;
   lpShares: number;
   xlmDeposited: number;
-  gktDeposited: number;
+  lqidDeposited: number;
   entryTimestamp: Date;
   lastUpdated: Date;
 }
@@ -56,9 +56,9 @@ export interface PriceFeedData {
 
 export interface AccountAssets {
   xlm: number;
-  gkt: number;
+  lqid: number;
   lpool: number;
-  hasGktTrust: boolean;
+  hasLqidTrust: boolean;
   hasLpoolTrust: boolean;
 }
 

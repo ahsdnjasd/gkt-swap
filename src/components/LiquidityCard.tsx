@@ -22,22 +22,22 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
   const { refreshBalance } = useWallet();
   const [activeTab, setActiveTab] = useState<'add' | 'remove'>('add');
   const [xlmAmount, setXlmAmount] = useState('');
-  const [gktAmount, setLqidAmount] = useState('');
+  const [lqidAmount, setLqidAmount] = useState('');
   const [removePercent, setRemovePercent] = useState(50);
   const [isProcessing, setIsProcessing] = useState(false);
   const [txSteps, setTxSteps] = useState<TxStep[]>([]);
 
-  // Auto-calculate gktAmount when xlmAmount changes to maintain pool ratio
+  // Auto-calculate lqidAmount when xlmAmount changes to maintain pool ratio
   useEffect(() => {
     if (activeTab === 'add' && xlmAmount && poolStats && poolStats.xlmReserve > 0) {
       const xlm = parseFloat(xlmAmount);
-      const ratio = poolStats.gktReserve / poolStats.xlmReserve;
+      const ratio = poolStats.lqidReserve / poolStats.xlmReserve;
       setLqidAmount((xlm * ratio).toFixed(7));
     }
   }, [xlmAmount, poolStats, activeTab]);
 
   const handleAddLiquidity = async () => {
-    if (!xlmAmount || !gktAmount || !userAddress || !poolStats) return;
+    if (!xlmAmount || !lqidAmount || !userAddress || !poolStats) return;
 
     try {
       setIsProcessing(true);
@@ -50,13 +50,13 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
       setTxSteps(steps);
 
       const xlm = parseFloat(xlmAmount);
-      const gkt = parseFloat(gktAmount);
-      const price = gkt / xlm;
+      const lqid = parseFloat(lqidAmount);
+      const price = lqid / xlm;
       
       const xdr = await buildAddLiquidityXDR(
         userAddress,
         xlm.toFixed(7),
-        gkt.toFixed(7),
+        lqid.toFixed(7),
         (price * 0.99).toFixed(7), // min price
         (price * 1.01).toFixed(7)  // max price
       );
@@ -68,7 +68,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
       const txHash = await submitSignedXDR(signedXdr);
 
       // Calculate shares received
-      const shares = getLPShares(xlm, gkt, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.gktReserve);
+      const shares = getLPShares(xlm, lqid, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.lqidReserve);
 
       // Update DB
       await fetch('/api/liquidity', {
@@ -78,7 +78,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
           userAddress,
           action: 'add',
           xlmAmount: xlm,
-          gktAmount: gkt,
+          lqidAmount: lqid,
           lpShares: shares,
           txHash,
         }),
@@ -108,13 +108,13 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
       setTxSteps(steps);
 
       const sharesToRemove = (position.lpShares * removePercent) / 100;
-      const { xlm, gkt } = getPositionValue(sharesToRemove, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.gktReserve);
+      const { xlm, lqid } = getPositionValue(sharesToRemove, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.lqidReserve);
       
       const xdr = await buildRemoveLiquidityXDR(
         userAddress,
         sharesToRemove.toFixed(7),
         (xlm * 0.99).toFixed(7),
-        (gkt * 0.99).toFixed(7)
+        (lqid * 0.99).toFixed(7)
       );
       
       steps[0].status = 'done'; steps[1].status = 'active'; setTxSteps([...steps]);
@@ -131,7 +131,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
           userAddress,
           action: 'remove',
           xlmAmount: xlm,
-          gktAmount: gkt,
+          lqidAmount: lqid,
           lpShares: sharesToRemove,
           txHash,
         }),
@@ -147,7 +147,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
     }
   };
 
-  const removePreview = position && poolStats ? getPositionValue((position.lpShares * removePercent) / 100, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.gktReserve) : { xlm: 0, gkt: 0 };
+  const removePreview = position && poolStats ? getPositionValue((position.lpShares * removePercent) / 100, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.lqidReserve) : { xlm: 0, lqid: 0 };
 
   return (
     <div className="space-y-6">
@@ -195,12 +195,12 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
             </div>
 
             <div className="bg-green-50/40 border border-green-100 p-5 rounded-3xl">
-              <label className="text-muted text-[10px] uppercase font-bold tracking-widest mb-2 block">GKT Amount (Calculated)</label>
+              <label className="text-muted text-[10px] uppercase font-bold tracking-widest mb-2 block">LQID Amount (Calculated)</label>
               <div className="flex items-center gap-4">
-                <div className="text-2xl font-mono text-foreground/50 w-full">{gktAmount || '0.00'}</div>
+                <div className="text-2xl font-mono text-foreground/50 w-full">{lqidAmount || '0.00'}</div>
                 <div className="flex items-center gap-2 bg-primary-dark/10 border border-primary-dark/20 px-3 py-1.5 rounded-xl">
                   <div className="w-5 h-5 rounded-full bg-primary-dark" />
-                  <span className="text-sm font-display font-bold text-primary-dark">GKT</span>
+                  <span className="text-sm font-display font-bold text-primary-dark">LQID</span>
                 </div>
               </div>
             </div>
@@ -253,7 +253,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
                   <div className="space-y-3">
                     <div className="flex justify-between font-mono">
                       <span className="text-foreground">{formatToken(removePreview.xlm)} XLM</span>
-                      <span className="text-foreground">{formatToken(removePreview.gkt)} GKT</span>
+                      <span className="text-foreground">{formatToken(removePreview.lqid)} LQID</span>
                     </div>
                   </div>
                 </div>

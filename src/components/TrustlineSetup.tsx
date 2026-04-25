@@ -7,7 +7,7 @@ import { createTrustlineXDR, submitSignedXDR, NETWORK_PASSPHRASE } from '@/lib/s
 import { signTransaction } from '@stellar/freighter-api';
 
 interface TrustlineSetupProps {
-  asset: 'GKT' | 'LPOOL';
+  asset: 'LQID' | 'LPOOL';
   userAddress: string;
   onSuccess: () => void;
 }

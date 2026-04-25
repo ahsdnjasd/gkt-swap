@@ -31,7 +31,7 @@ export default function RealtimeTicker() {
           
           <div className="flex items-center gap-8 animate-marquee">
             <div className="flex items-center gap-2">
-              <span className="text-muted text-[10px] font-bold">GKT/XLM:</span>
+              <span className="text-muted text-[10px] font-bold">LQID/XLM:</span>
               <span className={`font-mono text-xs font-bold transition-colors duration-500 ${priceColor}`}>
                 {data?.price ? formatToken(data.price, 4) : status === 'connecting' || (data && !data.price) ? 'Connecting...' : '---'}
               </span>

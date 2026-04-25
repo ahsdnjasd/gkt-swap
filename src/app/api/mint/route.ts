@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     const issuerPublicKey = issuerKeypair.publicKey();
     
     // Explicitly construct the asset to ensure validity
-    const gktAsset = new Asset('GKT', issuerPublicKey);
+    const lqidAsset = new Asset('LQID', issuerPublicKey);
 
     // Load the issuer account
     const issuerAccount = await server.loadAccount(issuerPublicKey);
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       .addOperation(
         Operation.payment({
           destination: targetAddress,
-          asset: gktAsset,
+          asset: lqidAsset,
           amount: parseFloat(amount).toFixed(7),
         })
       )
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
       success: true, 
       txHash: result.hash,
       amount: amount,
-      message: `Successfully minted ${amount} GKT to ${targetAddress}`
+      message: `Successfully minted ${amount} LQID to ${targetAddress}`
     });
   } catch (error: any) {
     console.error('Server Minting Error:', error);

@@ -17,7 +17,7 @@ import { formatToken } from '@/lib/utils';
 import { useWallet } from '@/context/WalletContext';
 
 const ADMIN_ADDRESS = process.env.NEXT_PUBLIC_ADMIN_ADDRESS;
-const ISSUER_ADDRESS = process.env.NEXT_PUBLIC_GKT_ISSUER;
+const ISSUER_ADDRESS = process.env.NEXT_PUBLIC_LQID_ISSUER;
 
 interface PreflightCheck {
   label: string;
@@ -26,7 +26,7 @@ interface PreflightCheck {
 }
 
 export default function AdminPage() {
-  const { address: userAddress, connecting: loading, refreshBalance, pollBalance, xlmBalance, gktBalance } = useWallet();
+  const { address: userAddress, connecting: loading, refreshBalance, pollBalance, xlmBalance, lqidBalance } = useWallet();
   const [isAdmin, setIsAdmin] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
   const [poolExists, setPoolExists] = useState<boolean | null>(null);
@@ -35,10 +35,10 @@ export default function AdminPage() {
   const [currentPoolId, setCurrentPoolId] = useState('');
   const [poolId, setPoolId] = useState('');
   const [initialXLM, setInitialXLM] = useState('1000');
-  const [initialGKT, setInitialGKT] = useState('1000');
+  const [initialLQID, setInitialLQID] = useState('1000');
   const [mintAmount, setMintAmount] = useState('10000');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [hasGktTrust, setHasLqidTrust] = useState(false);
+  const [hasLqidTrust, setHasLqidTrust] = useState(false);
 
   useEffect(() => {
     const computed = getCurrentPoolId(); 
@@ -72,14 +72,14 @@ export default function AdminPage() {
     setPreflightDone(false);
     const checks: PreflightCheck[] = [
       { label: 'XLM Balance', status: 'checking', detail: 'Checking...' },
-      { label: 'GKT Trustline', status: 'checking', detail: 'Checking...' },
-      { label: 'GKT Balance', status: 'checking', detail: 'Checking...' },
+      { label: 'LQID Trustline', status: 'checking', detail: 'Checking...' },
+      { label: 'LQID Balance', status: 'checking', detail: 'Checking...' },
       { label: 'Pool Status', status: 'checking', detail: 'Checking...' },
     ];
     setPreflightChecks([...checks]);
     try {
       const assets = await getAccountAssets(userAddress);
-      setHasLqidTrust(assets.hasGktTrust);
+      setHasLqidTrust(assets.hasLqidTrust);
       const requiredXLM = parseFloat(initialXLM) + 10;
       if (assets.xlm >= requiredXLM) {
         checks[0] = { label: 'XLM Balance', status: 'pass', detail: `${formatToken(assets.xlm)} XLM available` };
@@ -88,15 +88,15 @@ export default function AdminPage() {
       } else {
         checks[0] = { label: 'XLM Balance', status: 'fail', detail: 'No XLM found. Fund this account via friendbot or transfer.' };
       }
-      if (assets.hasGktTrust) {
-        checks[1] = { label: 'GKT Trustline', status: 'pass', detail: 'Trustline active on network' };
+      if (assets.hasLqidTrust) {
+        checks[1] = { label: 'LQID Trustline', status: 'pass', detail: 'Trustline active on network' };
       } else {
-        checks[1] = { label: 'GKT Trustline', status: 'fail', detail: 'Trustline missing. Receiver must trust GKT issuer first.' };
+        checks[1] = { label: 'LQID Trustline', status: 'fail', detail: 'Trustline missing. Receiver must trust LQID issuer first.' };
       }
-      if (assets.gkt >= parseFloat(initialGKT)) {
-        checks[2] = { label: 'GKT Balance', status: 'pass', detail: `${formatToken(assets.gkt)} GKT available` };
+      if (assets.lqid >= parseFloat(initialLQID)) {
+        checks[2] = { label: 'LQID Balance', status: 'pass', detail: `${formatToken(assets.lqid)} LQID available` };
       } else {
-        checks[2] = { label: 'GKT Balance', status: 'warning', detail: `${formatToken(assets.gkt)} GKT — need ${initialGKT} for pool` };
+        checks[2] = { label: 'LQID Balance', status: 'warning', detail: `${formatToken(assets.lqid)} LQID — need ${initialLQID} for pool` };
       }
       if (poolId) {
         const exists = await checkPoolExists(poolId);
@@ -117,7 +117,7 @@ export default function AdminPage() {
     }
     setPreflightChecks([...checks]);
     setPreflightDone(true);
-  }, [userAddress, initialXLM, initialGKT, poolId]);
+  }, [userAddress, initialXLM, initialLQID, poolId]);
 
   useEffect(() => {
     if (isAdmin && userAddress) { runPreflightChecks(); }
@@ -127,13 +127,13 @@ export default function AdminPage() {
     if (!userAddress) return;
     try {
       setIsProcessing(true);
-      setStatus({ type: 'info', message: 'Building GKT trustline transaction...' });
-      const xdr = await createTrustlineXDR(userAddress, 'GKT');
+      setStatus({ type: 'info', message: 'Building LQID trustline transaction...' });
+      const xdr = await createTrustlineXDR(userAddress, 'LQID');
       setStatus({ type: 'info', message: 'Awaiting signature...' });
       const signedXdr = await signTransaction(xdr, { networkPassphrase: 'Test SDF Network ; September 2015' });
       setStatus({ type: 'info', message: 'Broadcasting trustline transaction...' });
       await submitSignedXDR(signedXdr);
-      setStatus({ type: 'success', message: 'GKT Trustline established!' });
+      setStatus({ type: 'success', message: 'LQID Trustline established!' });
       pollBalance(10);
       runPreflightChecks();
       setCurrentPoolId(getCurrentPoolId());
@@ -148,7 +148,7 @@ export default function AdminPage() {
     if (!userAddress) return;
     try {
       setIsProcessing(true);
-      setStatus({ type: 'info', message: 'Minting GKT tokens via server...' });
+      setStatus({ type: 'info', message: 'Minting LQID tokens via server...' });
       const res = await fetch('/api/mint', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-key': 'SUPER_SECRET_ADMIN_KEY' },
@@ -156,7 +156,7 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (data.success) {
-        setStatus({ type: 'success', message: `Successfully minted ${mintAmount} GKT! TX: ${data.txHash?.substring(0, 8)}...` });
+        setStatus({ type: 'success', message: `Successfully minted ${mintAmount} LQID! TX: ${data.txHash?.substring(0, 8)}...` });
         pollBalance(10);
         runPreflightChecks();
       } else {
@@ -175,7 +175,7 @@ export default function AdminPage() {
       const res = await fetch('/api/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-key': 'SUPER_SECRET_ADMIN_KEY' },
-        body: JSON.stringify({ poolId, initialXLM, initialGKT })
+        body: JSON.stringify({ poolId, initialXLM, initialLQID })
       });
       const data = await res.json();
       if (data.success) {
@@ -193,8 +193,8 @@ export default function AdminPage() {
     try {
       setIsProcessing(true);
       setStatus({ type: 'info', message: 'Building Initial Deposit transaction...' });
-      const price = parseFloat(initialGKT) / parseFloat(initialXLM);
-      const xdr = await buildAddLiquidityXDR(userAddress, initialXLM, initialGKT, (price * 0.9).toFixed(7), (price * 1.1).toFixed(7));
+      const price = parseFloat(initialLQID) / parseFloat(initialXLM);
+      const xdr = await buildAddLiquidityXDR(userAddress, initialXLM, initialLQID, (price * 0.9).toFixed(7), (price * 1.1).toFixed(7));
       setStatus({ type: 'info', message: 'Opening Freighter signature...' });
       const signedXdr = await signTransaction(xdr, { networkPassphrase: 'Test SDF Network ; September 2015' });
       setStatus({ type: 'info', message: 'Creating Pool on Stellar...' });
@@ -217,7 +217,7 @@ export default function AdminPage() {
       const res = await fetch('/api/pool', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ xlmReserve: horizonData.xlmReserve, gktReserve: horizonData.gktReserve, totalLPShares: horizonData.totalShares, volume24h: 0 })
+        body: JSON.stringify({ xlmReserve: horizonData.xlmReserve, lqidReserve: horizonData.lqidReserve, totalLPShares: horizonData.totalShares, volume24h: 0 })
       });
       if (res.ok) {
         setStatus({ type: 'success', message: 'Database reserves synced with Horizon!' });
@@ -265,7 +265,7 @@ export default function AdminPage() {
         <ShieldAlert className="text-primary" size={48} />
         <div>
           <h1 className="text-3xl font-display font-black text-foreground">Admin Terminal</h1>
-          <p className="text-primary/70 font-medium">GKTSwap Protocol Configuration</p>
+          <p className="text-primary/70 font-medium">LQIDSwap Protocol Configuration</p>
         </div>
       </div>
 
@@ -337,7 +337,7 @@ export default function AdminPage() {
                 <span className="text-foreground text-sm font-display font-bold">{check.label}</span>
                 <p className="text-[11px] text-muted font-mono truncate">{check.detail}</p>
               </div>
-              {check.label === 'GKT Trustline' && (check.status === 'fail' || check.status === 'warning') && (
+              {check.label === 'LQID Trustline' && (check.status === 'fail' || check.status === 'warning') && (
                 <button onClick={handleSetupTrustline} disabled={isProcessing} className="text-[10px] px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-lg font-bold hover:bg-primary/20 transition-all disabled:opacity-50">
                   Setup
                 </button>
@@ -350,8 +350,8 @@ export default function AdminPage() {
           <div className="flex gap-4">
             <div className="flex flex-col items-end">
               <span className="text-[9px] text-muted uppercase">Issuer (P)</span>
-              <span className={`text-[10px] font-mono ${sanitize(process.env.NEXT_PUBLIC_GKT_ISSUER).length === 56 ? 'text-success' : 'text-danger'}`}>
-                {sanitize(process.env.NEXT_PUBLIC_GKT_ISSUER).length} / 56
+              <span className={`text-[10px] font-mono ${sanitize(process.env.NEXT_PUBLIC_LQID_ISSUER).length === 56 ? 'text-success' : 'text-danger'}`}>
+                {sanitize(process.env.NEXT_PUBLIC_LQID_ISSUER).length} / 56
               </span>
             </div>
           </div>
@@ -375,15 +375,15 @@ export default function AdminPage() {
         <div className="flex items-center gap-3 mb-2">
           <span className="w-8 h-8 rounded-full bg-primary-dark/10 text-primary-dark flex items-center justify-center font-mono font-bold text-sm">1</span>
           <h3 className="text-foreground font-display font-black text-xl flex items-center gap-2">
-            Mint GKT Tokens <Coins size={20} className="text-primary-dark" />
+            Mint LQID Tokens <Coins size={20} className="text-primary-dark" />
           </h3>
         </div>
-        <p className="text-muted text-xs mb-8 ml-11">Mint GKT tokens to your administrator wallet.</p>
+        <p className="text-muted text-xs mb-8 ml-11">Mint LQID tokens to your administrator wallet.</p>
         <div className="flex gap-4">
           <input type="number" value={mintAmount} onChange={(e) => setMintAmount(e.target.value)} className="flex-1 bg-green-50/30 border border-green-100 rounded-xl p-4 text-foreground font-mono focus:outline-none focus:border-primary-dark" placeholder="10000" />
-          <button onClick={handleMint} disabled={isProcessing || !hasGktTrust} className="px-8 py-4 bg-primary-dark text-white font-display font-black rounded-xl hover:scale-[1.01] transition-all flex items-center justify-center gap-3 disabled:opacity-50">
+          <button onClick={handleMint} disabled={isProcessing || !hasLqidTrust} className="px-8 py-4 bg-primary-dark text-white font-display font-black rounded-xl hover:scale-[1.01] transition-all flex items-center justify-center gap-3 disabled:opacity-50">
             <RefreshCw className={isProcessing ? 'animate-spin' : ''} size={20} />
-            {!hasGktTrust ? 'Need Trustline' : 'Mint GKT'}
+            {!hasLqidTrust ? 'Need Trustline' : 'Mint LQID'}
           </button>
         </div>
       </section>
@@ -401,7 +401,7 @@ export default function AdminPage() {
         <div className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] text-muted font-bold uppercase tracking-widest">Liquidity Pool ID (Auto-computed)</label>
-            <input type="text" value={poolId} onChange={(e) => setPoolId(e.target.value)} className="w-full bg-green-50/30 border border-green-100 rounded-xl p-4 text-foreground font-mono text-xs focus:outline-none focus:border-primary transition-all" placeholder="Auto-computed from XLM/GKT pair" />
+            <input type="text" value={poolId} onChange={(e) => setPoolId(e.target.value)} className="w-full bg-green-50/30 border border-green-100 rounded-xl p-4 text-foreground font-mono text-xs focus:outline-none focus:border-primary transition-all" placeholder="Auto-computed from XLM/LQID pair" />
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -409,8 +409,8 @@ export default function AdminPage() {
               <input type="number" value={initialXLM} onChange={(e) => setInitialXLM(e.target.value)} className="w-full bg-green-50/30 border border-green-100 rounded-xl p-4 text-foreground font-mono focus:outline-none focus:border-primary" placeholder="1000.00" />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] text-muted font-bold uppercase tracking-widest">Target GKT Reserve</label>
-              <input type="number" value={initialGKT} onChange={(e) => setInitialGKT(e.target.value)} className="w-full bg-green-50/30 border border-green-100 rounded-xl p-4 text-foreground font-mono focus:outline-none focus:border-primary-dark" placeholder="1000.00" />
+              <label className="text-[10px] text-muted font-bold uppercase tracking-widest">Target LQID Reserve</label>
+              <input type="number" value={initialLQID} onChange={(e) => setInitialLQID(e.target.value)} className="w-full bg-green-50/30 border border-green-100 rounded-xl p-4 text-foreground font-mono focus:outline-none focus:border-primary-dark" placeholder="1000.00" />
             </div>
           </div>
           <button onClick={handleInitializeDB} className="w-full py-4 bg-green-50/50 border border-green-100 text-foreground font-display font-black rounded-xl hover:bg-green-50 transition-all flex items-center justify-center gap-2">
@@ -428,7 +428,7 @@ export default function AdminPage() {
             Create Pool on Stellar <PlusCircle size={20} className="text-primary" />
           </h3>
         </div>
-        <p className="text-muted text-xs mb-8 ml-11">Deposit {initialXLM} XLM + {initialGKT} GKT to establish the initial 50/50 ratio.</p>
+        <p className="text-muted text-xs mb-8 ml-11">Deposit {initialXLM} XLM + {initialLQID} LQID to establish the initial 50/50 ratio.</p>
         <button onClick={handleStellarInit} disabled={isProcessing} className="w-full py-4 bg-primary text-white font-display font-black rounded-xl hover:scale-[1.01] transition-all flex items-center justify-center gap-2 disabled:opacity-50">
           <Zap size={18} /> Create & Fund Pool on Stellar Network
         </button>
@@ -453,7 +453,7 @@ export default function AdminPage() {
          </div>
          <p className="text-xs text-danger/80 leading-relaxed font-medium">
             To make the DEX functional: <br/>
-            1. Use <strong>Step 1: Mint GKT</strong> to fund your wallet with tokens for liquidity. <br/>
+            1. Use <strong>Step 1: Mint LQID</strong> to fund your wallet with tokens for liquidity. <br/>
             2. Use <strong>Step 2: Initialize Database</strong> to set up the pool record. <br/>
             3. Use <strong>Step 3: Create Pool on Stellar</strong> to establish the initial 50/50 ratio on the network. <br/>
             4. Use <strong>Horizon Sync</strong> afterwards to keep the database in sync with on-chain data.

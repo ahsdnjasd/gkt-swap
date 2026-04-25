@@ -18,7 +18,7 @@ export async function GET(req: Request) {
           
           let data;
           if (pool) {
-            const price = getPrice(pool.xlmReserve, pool.gktReserve);
+            const price = getPrice(pool.xlmReserve, pool.lqidReserve);
             data = JSON.stringify({
               price,
               tvl: pool.tvlXLM,
