@@ -2,6 +2,7 @@
 
 GKTSwap is a next-generation decentralized exchange built on the Stellar Testnet. It leverages Stellar's native Liquidity Pools (AMM) to provide instant swaps, deep liquidity, and institutional-grade security with an ultra-premium glassmorphic interface.
 
+[![CI/CD Pipeline](https://github.com/ahsdnjasd/gkt-swap/actions/workflows/ci.yml/badge.svg)](https://github.com/ahsdnjasd/gkt-swap/actions)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge&logo=netlify)](https://unrivaled-tarsier-375dd1.netlify.app/)
 
 **Live Demo**: [https://unrivaled-tarsier-375dd1.netlify.app/](https://unrivaled-tarsier-375dd1.netlify.app/)
