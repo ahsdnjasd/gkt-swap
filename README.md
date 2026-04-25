@@ -2,7 +2,6 @@
 
 GKTSwap is a next-generation decentralized exchange built on the Stellar Testnet. It leverages Stellar's native Liquidity Pools (AMM) to provide instant swaps, deep liquidity, and institutional-grade security with an ultra-premium glassmorphic interface.
 
-[![CI/CD Pipeline](https://github.com/parth1241/liquidswap/actions/workflows/ci.yml/badge.svg)](https://github.com/parth1241/liquidswap/actions)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge&logo=vercel)](https://gktswap.vercel.app/)
 
 **Live Demo**: [https://gktswap.vercel.app/](https://gktswap.vercel.app/)
@@ -80,7 +79,3 @@ GKTSwap implements a dual-contract architecture to demonstrate advanced Soroban 
 
 ---
 
-## ✅ CI/CD Status
-Every commit is automatically validated and deployed via our Vercel integration, ensuring a 100% type-safe and lint-free production environment.
-
-![CI/CD Build](https://img.shields.io/badge/Build-Passing-success?style=flat-square&logo=github-actions)
