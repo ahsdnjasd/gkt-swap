@@ -50,7 +50,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative pt-12 lg:pt-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-7 space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan/10 border border-cyan/20 rounded-full text-cyan font-display font-black text-xs uppercase tracking-widest animate-pulse">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary font-display font-black text-xs uppercase tracking-widest animate-pulse">
             <Zap size={14} />
             Live on Stellar Testnet
           </div>
@@ -61,41 +61,41 @@ export default function LandingPage() {
                 <span className="flex h-2 w-2 rounded-full bg-warning animate-ping" />
                 <p className="text-[10px] font-bold text-warning uppercase tracking-widest">Protocol Uninitialized</p>
               </div>
-              <Link href="/admin" className="text-[10px] font-bold text-white bg-warning/20 px-3 py-1.5 rounded-lg group-hover:bg-warning/30 transition-all flex items-center gap-1">
+              <Link href="/admin" className="text-[10px] font-bold text-foreground bg-warning/20 px-3 py-1.5 rounded-lg group-hover:bg-warning/30 transition-all flex items-center gap-1">
                 Setup Pool <ChevronRight size={12} />
               </Link>
             </div>
           )}
 
-          <h1 className="text-6xl lg:text-8xl font-display font-black text-white leading-[0.9] tracking-tighter">
+          <h1 className="text-6xl lg:text-8xl font-display font-black text-foreground leading-[0.9] tracking-tighter">
             The Fastest <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan via-violet to-cyan bg-[length:200%_auto] animate-gradient">
+            <span className="text-primary">
               DEX on Stellar
             </span>
           </h1>
           <p className="text-xl text-muted max-w-lg leading-relaxed font-medium">
-            Swap XLM ↔ LQID with zero slippage anxiety. 
+            Swap XLM ↔ GKT with zero slippage anxiety. 
             Deep liquidity, institutional-grade security, and instant settlement.
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
             <Link
               href="/swap"
-              className="px-8 py-4 bg-cyan text-background font-display font-black rounded-2xl hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all flex items-center gap-2 group"
+              className="px-8 py-4 bg-primary text-white font-display font-black rounded-2xl hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all flex items-center gap-2 group"
             >
               Start Trading
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/liquidity"
-              className="px-8 py-4 bg-card border border-border text-white font-display font-black rounded-2xl hover:bg-white/5 transition-all flex items-center gap-2"
+              className="px-8 py-4 glass border border-green-100 text-foreground font-display font-black rounded-2xl hover:bg-green-50/50 transition-all flex items-center gap-2"
             >
               Add Liquidity
-              <Droplets size={20} className="text-violet" />
+              <Droplets size={20} className="text-primary-dark" />
             </Link>
           </div>
           
           {/* Animated Blob Visualization */}
-          <div className="hidden lg:block relative h-48 w-full mt-12 bg-card/20 border border-border/50 rounded-[3rem] overflow-hidden">
+          <div className="hidden lg:block relative h-48 w-full mt-12 glass rounded-[3rem] overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                <svg viewBox="0 0 400 200" className="w-full h-full opacity-40">
                 <defs>
@@ -105,19 +105,19 @@ export default function LandingPage() {
                   </filter>
                 </defs>
                 <g filter="url(#goo)">
-                  <circle cx="150" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.xlmReserve / pool.tvlXLM) * 100)) : 60} fill="#00d4ff" className="animate-blob" />
-                  <circle cx="250" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.lqidReserve / pool.tvlXLM) * 100)) : 60} fill="#7c3aed" className="animate-blob [animation-delay:2s]" />
+                  <circle cx="150" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.xlmReserve / pool.tvlXLM) * 100)) : 60} fill="#22c55e" className="animate-blob" />
+                  <circle cx="250" cy="100" r={pool ? Math.max(40, Math.min(80, (pool.gktReserve / pool.tvlXLM) * 100)) : 60} fill="#16a34a" className="animate-blob [animation-delay:2s]" />
                 </g>
               </svg>
             </div>
             <div className="absolute inset-0 flex items-center justify-around px-8">
               <div className="text-center">
-                <span className="block text-cyan font-mono font-bold text-lg">{pool?.xlmReserve ? (pool.xlmReserve / 1000).toFixed(1) : '0.0'}k</span>
+                <span className="block text-primary font-mono font-bold text-lg">{pool?.xlmReserve ? (pool.xlmReserve / 1000).toFixed(1) : '0.0'}k</span>
                 <span className="text-[10px] text-muted font-bold uppercase tracking-widest">XLM Locked</span>
               </div>
               <div className="text-center">
-                <span className="block text-violet font-mono font-bold text-lg">{pool?.lqidReserve ? (pool.lqidReserve / 1000).toFixed(1) : '0.0'}k</span>
-                <span className="text-[10px] text-muted font-bold uppercase tracking-widest">LQID Locked</span>
+                <span className="block text-primary-dark font-mono font-bold text-lg">{pool?.gktReserve ? (pool.gktReserve / 1000).toFixed(1) : '0.0'}k</span>
+                <span className="text-[10px] text-muted font-bold uppercase tracking-widest">GKT Locked</span>
               </div>
             </div>
           </div>
@@ -131,17 +131,17 @@ export default function LandingPage() {
       {/* Stats Section */}
       <section className="space-y-8">
         <div className="flex justify-between items-end">
-          <h2 className="text-4xl font-display font-black text-white">Market Data</h2>
-          <Link href="/pool" className="text-cyan text-sm font-bold flex items-center gap-1 hover:underline">
+          <h2 className="text-4xl font-display font-black text-foreground">Market Data</h2>
+          <Link href="/pool" className="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
             View Full Analytics <ChevronRight size={16} />
           </Link>
         </div>
-        <PoolStats pool={pool} price={pool ? pool.xlmReserve / pool.lqidReserve : 0} loading={loading} />
+        <PoolStats pool={pool} price={pool ? pool.xlmReserve / pool.gktReserve : 0} loading={loading} />
       </section>
 
       {/* History Section */}
       <section className="space-y-8">
-        <h2 className="text-4xl font-display font-black text-white">Live Transactions</h2>
+        <h2 className="text-4xl font-display font-black text-foreground">Live Transactions</h2>
         <SwapHistory swaps={swaps.slice(0, 5)} />
       </section>
     </div>

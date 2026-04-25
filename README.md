@@ -1,19 +1,23 @@
-# ☄️ LiquidSwap | The Fastest DEX on Stellar
+# ☄️ GKTSwap | The Fastest DEX on Stellar
 
-LiquidSwap is a next-generation decentralized exchange built on the Stellar Testnet. It leverages Stellar's native Liquidity Pools (AMM) to provide instant swaps, deep liquidity, and institutional-grade security with an ultra-premium glassmorphic interface.
+GKTSwap is a next-generation decentralized exchange built on the Stellar Testnet. It leverages Stellar's native Liquidity Pools (AMM) to provide instant swaps, deep liquidity, and institutional-grade security with an ultra-premium glassmorphic interface.
 
 [![CI/CD Pipeline](https://github.com/parth1241/liquidswap/actions/workflows/ci.yml/badge.svg)](https://github.com/parth1241/liquidswap/actions)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge&logo=vercel)](https://liquidswap-iota.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge&logo=vercel)](https://gktswap.vercel.app/)
 
-**Live Demo**: [https://liquidswap-iota.vercel.app/](https://liquidswap-iota.vercel.app/)
+**Live Demo**: [https://gktswap.vercel.app/](https://gktswap.vercel.app/)
 
 ---
 
-## 📱 Mobile Responsive View
+## 🖼️ Platform Interface
 
-LiquidSwap is fully optimized for mobile devices, providing a seamless trading experience on the go.
+GKTSwap provides an ultra-premium, light-themed glassmorphic interface designed for clarity and speed.
 
-![Mobile Responsive View](./mobile_view.png)
+### Desktop Dashboard
+![Desktop Dashboard](./public/screenshots/dashboard.png)
+
+### Mobile Trading Experience
+![Mobile Demo](./public/screenshots/mobile_demo.png)
 
 ---
 
@@ -21,8 +25,8 @@ LiquidSwap is fully optimized for mobile devices, providing a seamless trading e
 
 The protocol is officially deployed and initialized on the Stellar Testnet.
 
-- **LQID Issuer Address**: [`GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ`](https://stellar.expert/explorer/testnet/account/GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ)
-- **Asset Code**: `LQID`
+- **GKT Issuer Address**: [`GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ`](https://stellar.expert/explorer/testnet/account/GCDAND5QSCVFFEDUCK62VEZASVPYOUATCMJ4EXAUVEOUPILOJDDEFUTZ)
+- **Asset Code**: `GKT`
 - **Native Pool ID**: `d36b6d8e280ed87f58d7a984cc4e3dbbcb2e81b127947ccd6deb16fec06e567b`
 - **Native Pool Address**: `GC7SEQUPZUQSFX4HZECHCF5CSD7VYUVXCDREQBHQVS5BLDCOESCD33HL`
 - **Liquid Token ID**: `CDLYV3ZUPB4G4O5U6V7XW2L...` (Soroban SEP-41)
@@ -34,14 +38,14 @@ The protocol is officially deployed and initialized on the Stellar Testnet.
 
 ## 🏗️ Advanced Contract Architecture
 
-LiquidSwap implements a dual-contract architecture to demonstrate advanced Soroban patterns:
+GKTSwap implements a dual-contract architecture to demonstrate advanced Soroban patterns:
 
 1. **`liquid_token`**: A custom Soroban token implementation (SEP-41) that manages the protocol's native liquidity currency.
 2. **`liquid_vault`**: An inter-contract execution layer that performs **Inter-contract calls** to the token contract for secure deposits and account management.
 
 ### Key Patterns:
 - **Inter-contract Calls**: The Vault contract invokes the Token contract's `transfer` method to verify and execute on-chain swaps.
-- **Custom Asset Logic**: Implementation of a decentralized minting and distribution mechanism for the LQID token.
+- **Custom Asset Logic**: Implementation of a decentralized minting and distribution mechanism for the GKT token.
 - **CI/CD Integration**: Every contract change is automatically validated via our GitHub Actions pipeline (Rust/WASM build checks).
 
 

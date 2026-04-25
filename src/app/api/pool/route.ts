@@ -23,7 +23,7 @@ export async function GET() {
     pool = await PoolModel.create({
       poolId,
       xlmReserve: 0,
-      lqidReserve: 0,
+      gktReserve: 0,
       totalLPShares: 0,
       volume24h: 0,
       fees24h: 0,
@@ -39,14 +39,14 @@ export async function GET() {
 export async function POST(req: Request) {
   await connectDB();
   const body = await req.json();
-  const { xlmReserve, lqidReserve, totalLPShares, volume24h } = body;
+  const { xlmReserve, gktReserve, totalLPShares, volume24h } = body;
 
   const poolId = getCurrentPoolId();
   const pool = await PoolModel.findOneAndUpdate(
     { poolId },
     {
       xlmReserve,
-      lqidReserve,
+      gktReserve,
       totalLPShares,
       volume24h,
       tvlXLM: xlmReserve * 2, // Simplified TVL calculation

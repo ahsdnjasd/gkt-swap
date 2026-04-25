@@ -4,7 +4,7 @@ import mongoose, { Schema, Document, model, models } from 'mongoose';
 export interface IPool extends Document {
   poolId: string;
   xlmReserve: number;
-  lqidReserve: number;
+  gktReserve: number;
   totalLPShares: number;
   volume24h: number;
   fees24h: number;
@@ -15,7 +15,7 @@ export interface IPool extends Document {
 const PoolSchema = new Schema<IPool>({
   poolId: { type: String, required: true, unique: true },
   xlmReserve: { type: Number, required: true },
-  lqidReserve: { type: Number, required: true },
+  gktReserve: { type: Number, required: true },
   totalLPShares: { type: Number, required: true },
   volume24h: { type: Number, default: 0 },
   fees24h: { type: Number, default: 0 },

@@ -20,8 +20,8 @@ interface SwapCardProps {
 }
 
 export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
-  const [fromToken, setFromToken] = useState<'XLM' | 'LQID'>('XLM');
-  const [toToken, setToToken] = useState<'XLM' | 'LQID'>('LQID');
+  const [fromToken, setFromToken] = useState<'XLM' | 'GKT'>('XLM');
+  const [toToken, setToToken] = useState<'XLM' | 'GKT'>('GKT');
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState<number>(0);
   const [quote, setQuote] = useState<SwapQuote | null>(null);
@@ -39,8 +39,8 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
         }
 
         const input = parseFloat(amount);
-        const inputReserve = fromToken === 'XLM' ? poolStats.xlmReserve : poolStats.lqidReserve;
-        const outputReserve = fromToken === 'XLM' ? poolStats.lqidReserve : poolStats.xlmReserve;
+        const inputReserve = fromToken === 'XLM' ? poolStats.xlmReserve : poolStats.gktReserve;
+        const outputReserve = fromToken === 'XLM' ? poolStats.gktReserve : poolStats.xlmReserve;
 
         const output = getSwapOutput(input, inputReserve, outputReserve);
         const impact = getPriceImpact(input, inputReserve);
@@ -62,9 +62,9 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
     calculateQuote(fromAmount);
   }, [fromAmount, calculateQuote]);
 
-  const { refreshBalance, pollBalance, hasLqidTrust } = useWallet();
+  const { refreshBalance, pollBalance, hasGktTrust } = useWallet();
 
-  const showTrustlineRequired = toToken === 'LQID' && !hasLqidTrust && !!userAddress;
+  const showTrustlineRequired = toToken === 'GKT' && !hasGktTrust && !!userAddress;
 
   const handleFlip = () => {
     const prevFrom = fromToken;
@@ -75,9 +75,9 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
     setQuote(null);
   };
 
-  const handleFromTokenChange = (token: 'XLM' | 'LQID') => {
+  const handleFromTokenChange = (token: 'XLM' | 'GKT') => {
     setFromToken(token);
-    setToToken(token === 'XLM' ? 'LQID' : 'XLM');
+    setToToken(token === 'XLM' ? 'GKT' : 'XLM');
     setFromAmount('');
     setQuote(null);
   };
@@ -155,15 +155,15 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
   };
 
   return (
-    <div className="bg-card border border-border p-6 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+    <div className="glass-strong p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-white font-display font-bold text-xl">Swap Tokens</h2>
+        <h2 className="text-foreground font-display font-bold text-xl">Swap Tokens</h2>
         <SlippageSettings value={slippage} onChange={setSlippage} />
       </div>
 
       <div className="space-y-2">
         {/* From Section */}
-        <div className="bg-background/50 border border-border p-4 rounded-3xl hover:border-muted transition-all">
+        <div className="bg-green-50/40 border border-green-100 p-4 rounded-3xl hover:border-primary/30 transition-all">
           <div className="flex justify-between mb-2">
             <span className="text-muted text-xs font-medium">You Pay</span>
           </div>
@@ -173,7 +173,7 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
               placeholder="0.00"
-              className="bg-transparent text-2xl font-mono text-white w-full focus:outline-none placeholder:text-muted/30"
+              className="bg-transparent text-2xl font-mono text-foreground w-full focus:outline-none placeholder:text-muted/30"
             />
             <TokenSelector value={fromToken} onChange={handleFromTokenChange} />
           </div>
@@ -183,19 +183,19 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
         <div className="flex justify-center -my-4 relative z-10">
           <button
             onClick={handleFlip}
-            className="p-3 bg-card border border-border rounded-xl text-cyan hover:text-white hover:border-cyan transition-all shadow-xl"
+            className="p-3 glass-strong rounded-xl text-primary hover:text-primary-dark hover:border-primary/30 transition-all shadow-lg"
           >
             <ArrowDownUp size={18} />
           </button>
         </div>
 
         {/* To Section */}
-        <div className="bg-background/50 border border-border p-4 rounded-3xl hover:border-muted transition-all">
+        <div className="bg-green-50/40 border border-green-100 p-4 rounded-3xl hover:border-primary/30 transition-all">
           <div className="flex justify-between mb-2">
             <span className="text-muted text-xs font-medium">You Receive (Est.)</span>
           </div>
           <div className="flex items-center gap-4">
-            <div className="bg-transparent text-2xl font-mono text-white/50 w-full overflow-hidden truncate">
+            <div className="bg-transparent text-2xl font-mono text-foreground/50 w-full overflow-hidden truncate">
               {toAmount > 0 ? formatToken(toAmount) : '0.00'}
             </div>
             <TokenSelector value={toToken} onChange={setToToken} disabled />
@@ -215,7 +215,7 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
           </div>
           <div className="flex justify-between items-center text-xs">
             <span className="text-muted">Minimum Received</span>
-            <span className="text-white font-mono">{formatToken(quote.minimumReceived)} {toToken}</span>
+            <span className="text-foreground font-mono">{formatToken(quote.minimumReceived)} {toToken}</span>
           </div>
         </div>
       )}
@@ -223,7 +223,7 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
       <button
         onClick={handleSwap}
         disabled={!quote || !userAddress || isProcessing || showTrustlineRequired}
-        className="w-full mt-8 py-4 bg-gradient-to-r from-cyan to-violet text-white font-display font-black text-lg rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-cyan/20 disabled:opacity-50 disabled:hover:scale-100"
+        className="w-full mt-8 py-4 bg-primary text-white font-display font-black text-lg rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 disabled:opacity-50 disabled:hover:scale-100"
       >
         {isProcessing ? (
           <div className="flex items-center justify-center gap-2">
@@ -246,7 +246,7 @@ export default function SwapCard({ userAddress, poolStats }: SwapCardProps) {
       {showTrustlineRequired && (
         <div className="mt-6 animate-in fade-in zoom-in duration-300">
           <TrustlineSetup 
-            asset="LQID" 
+            asset="GKT" 
             userAddress={userAddress} 
             onSuccess={() => refreshBalance()} 
           />

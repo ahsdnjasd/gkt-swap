@@ -26,12 +26,12 @@ export function getPriceImpact(inputAmount: number, inputReserve: number): numbe
 }
 
 /**
- * Calculates the current price of LQID in terms of XLM.
- * Formula: xlmReserve / lqidReserve
+ * Calculates the current price of GKT in terms of XLM.
+ * Formula: xlmReserve / gktReserve
  */
-export function getPrice(xlmReserve: number, lqidReserve: number): number {
-  if (lqidReserve <= 0) return 0;
-  return xlmReserve / lqidReserve;
+export function getPrice(xlmReserve: number, gktReserve: number): number {
+  if (gktReserve <= 0) return 0;
+  return xlmReserve / gktReserve;
 }
 
 /**
@@ -39,17 +39,17 @@ export function getPrice(xlmReserve: number, lqidReserve: number): number {
  */
 export function getLPShares(
   xlmAmount: number,
-  lqidAmount: number,
+  gktAmount: number,
   totalShares: number,
   xlmReserve: number,
-  lqidReserve: number
+  gktReserve: number
 ): number {
   if (totalShares === 0) {
-    return Math.sqrt(xlmAmount * lqidAmount);
+    return Math.sqrt(xlmAmount * gktAmount);
   } else {
     const xlmShare = (xlmAmount / xlmReserve) * totalShares;
-    const lqidShare = (lqidAmount / lqidReserve) * totalShares;
-    return Math.min(xlmShare, lqidShare);
+    const gktShare = (gktAmount / gktReserve) * totalShares;
+    return Math.min(xlmShare, gktShare);
   }
 }
 
@@ -60,13 +60,13 @@ export function getPositionValue(
   lpShares: number,
   totalShares: number,
   xlmReserve: number,
-  lqidReserve: number
-): { xlm: number; lqid: number } {
-  if (totalShares === 0) return { xlm: 0, lqid: 0 };
+  gktReserve: number
+): { xlm: number; gkt: number } {
+  if (totalShares === 0) return { xlm: 0, gkt: 0 };
   const shareRatio = lpShares / totalShares;
   return {
     xlm: xlmReserve * shareRatio,
-    lqid: lqidReserve * shareRatio,
+    gkt: gktReserve * shareRatio,
   };
 }
 

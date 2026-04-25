@@ -12,8 +12,8 @@ export function formatXLM(amount: number): string {
   return `${formatToken(amount)} XLM`;
 }
 
-export function formatLQID(amount: number): string {
-  return `${formatToken(amount)} LQID`;
+export function formatGKT(amount: number): string {
+  return `${formatToken(amount)} GKT`;
 }
 
 export function formatPercent(value: number, decimals = 2): string {

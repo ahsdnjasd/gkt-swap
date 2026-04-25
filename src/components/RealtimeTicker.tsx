@@ -9,51 +9,51 @@ import { Circle, Zap } from 'lucide-react';
 
 export default function RealtimeTicker() {
   const [data, setData] = useState<PriceFeedData | null>(null);
-  const [priceColor, setPriceColor] = useState('text-cyan');
+  const [priceColor, setPriceColor] = useState('text-primary');
   const status = useConnectionStatus();
 
   usePriceFeed((newData) => {
     if (data && newData.price !== data.price) {
       setPriceColor(newData.price > data.price ? 'text-success' : 'text-danger');
-      setTimeout(() => setPriceColor('text-cyan'), 2000);
+      setTimeout(() => setPriceColor('text-primary'), 2000);
     }
     setData(newData);
   });
 
   return (
-    <div className="w-full bg-[#04040a]/80 backdrop-blur-md border-b border-border py-2 overflow-hidden sticky top-0 z-[60]">
+    <div className="w-full glass-subtle border-b border-green-100/50 py-2 overflow-hidden sticky top-0 z-[60]">
       <div className="max-w-[1400px] mx-auto px-6 flex justify-between items-center">
         <div className="flex items-center gap-6 overflow-hidden whitespace-nowrap">
-          <div className="flex items-center gap-2 pr-6 border-r border-border/50">
-            <Zap size={14} className="text-cyan fill-cyan" />
-            <span className="text-[10px] font-display font-black text-white uppercase tracking-tighter">Live Markets</span>
+          <div className="flex items-center gap-2 pr-6 border-r border-green-200/50">
+            <Zap size={14} className="text-primary fill-primary" />
+            <span className="text-[10px] font-display font-black text-foreground uppercase tracking-tighter">Live Markets</span>
           </div>
           
           <div className="flex items-center gap-8 animate-marquee">
             <div className="flex items-center gap-2">
-              <span className="text-muted text-[10px] font-bold">LQID/XLM:</span>
+              <span className="text-muted text-[10px] font-bold">GKT/XLM:</span>
               <span className={`font-mono text-xs font-bold transition-colors duration-500 ${priceColor}`}>
-                {data ? formatToken(data.price, 4) : status === 'connecting' ? 'Connecting...' : '---'}
+                {data?.price ? formatToken(data.price, 4) : status === 'connecting' || (data && !data.price) ? 'Connecting...' : '---'}
               </span>
             </div>
             
             <div className="flex items-center gap-2">
               <span className="text-muted text-[10px] font-bold">24h Vol:</span>
-              <span className="text-white font-mono text-xs font-bold">
+              <span className="text-foreground font-mono text-xs font-bold">
                 {data ? formatXLM(data.volume) : status === 'connecting' ? '---' : '---'}
               </span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-muted text-[10px] font-bold">TVL:</span>
-              <span className="text-white font-mono text-xs font-bold">
+              <span className="text-foreground font-mono text-xs font-bold">
                 {data ? formatXLM(data.tvl) : status === 'connecting' ? '---' : '---'}
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 pl-6 bg-[#04040a] shadow-[-20px_0_20px_#04040a]">
+        <div className="flex items-center gap-2 pl-6 bg-white shadow-[-20px_0_20px_white]">
           <span className="text-[9px] text-muted font-mono uppercase tracking-widest">{status}</span>
           <Circle 
             size={8} 

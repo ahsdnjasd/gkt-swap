@@ -7,7 +7,7 @@ import { createTrustlineXDR, submitSignedXDR, NETWORK_PASSPHRASE } from '@/lib/s
 import { signTransaction } from '@stellar/freighter-api';
 
 interface TrustlineSetupProps {
-  asset: 'LQID' | 'LPOOL';
+  asset: 'GKT' | 'LPOOL';
   userAddress: string;
   onSuccess: () => void;
 }
@@ -46,13 +46,13 @@ export default function TrustlineSetup({ asset, userAddress, onSuccess }: Trustl
   }
 
   return (
-    <div className="bg-violet/5 border border-violet/20 p-6 rounded-2xl">
+    <div className="bg-primary/5 border border-primary/15 p-6 rounded-2xl">
       <div className="flex items-start gap-4 mb-6">
-        <div className="bg-violet/20 p-3 rounded-xl text-violet">
+        <div className="bg-primary/10 p-3 rounded-xl text-primary">
           <ShieldCheck size={28} />
         </div>
         <div>
-          <h3 className="text-white font-display font-bold text-lg">Trustline Required</h3>
+          <h3 className="text-foreground font-display font-bold text-lg">Trustline Required</h3>
           <p className="text-muted text-sm leading-relaxed">
             You need a {asset} trustline on the Stellar network before you can hold or trade this asset.
           </p>
@@ -69,7 +69,7 @@ export default function TrustlineSetup({ asset, userAddress, onSuccess }: Trustl
       <button
         onClick={handleSetup}
         disabled={step !== 'idle' && step !== 'error'}
-        className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-violet text-white font-bold rounded-xl hover:shadow-[0_0_25px_rgba(124,58,237,0.4)] transition-all disabled:opacity-50 disabled:hover:shadow-none"
+        className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-bold rounded-xl hover:shadow-[0_0_25px_rgba(34,197,94,0.2)] transition-all disabled:opacity-50 disabled:hover:shadow-none"
       >
         {step === 'idle' || step === 'error' ? (
           <>Setup {asset} Trustline</>
@@ -87,9 +87,9 @@ export default function TrustlineSetup({ asset, userAddress, onSuccess }: Trustl
             <div
               key={s}
               className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
-                step === s ? 'bg-violet animate-pulse' : 
+                step === s ? 'bg-primary animate-pulse' : 
                 (['signing', 'broadcasting'].includes(step as any) && s === 'preparing') || (step === 'broadcasting' && s === 'signing')
-                ? 'bg-success' : 'bg-border'
+                ? 'bg-success' : 'bg-green-100'
               }`}
             />
           ))}

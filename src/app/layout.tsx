@@ -21,8 +21,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'LiquidSwap | DEX on Stellar',
-  description: 'The fastest, most fluid DEX on Stellar Testnet. Swap XLM and LQID with ease.',
+  title: 'GKTSwap | DEX on Stellar',
+  description: 'The fastest, most fluid DEX on Stellar Testnet. Swap XLM and GKT with ease.',
 };
 
 export default function RootLayout({
@@ -32,20 +32,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${syne.variable} ${mono.variable}`}>
-      <body className="bg-[#04040a] text-slate-200 min-h-screen flex flex-col font-sans selection:bg-cyan/30">
+      <body className="bg-white text-foreground min-h-screen flex flex-col font-sans selection:bg-primary/20">
         <WalletProvider>
           <RealtimeTicker />
           
           {/* Top Navbar */}
-          <header className="sticky top-[41px] z-50 bg-[#04040a]/80 backdrop-blur-lg border-b border-border px-6 py-4">
+          <header className="sticky top-[41px] z-50 glass-strong border-b border-green-100/50 px-6 py-4">
             <div className="max-w-[1400px] mx-auto flex justify-between items-center">
               <Link href="/" className="flex items-center gap-2 group">
-                <span className="text-2xl text-cyan font-display font-black group-hover:drop-shadow-[0_0_10px_rgba(0,212,255,0.5)] transition-all">
-                  ⬡ LiquidSwap
+                <span className="text-2xl text-primary font-display font-black group-hover:drop-shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all">
+                  ⬡ GKTSwap
                 </span>
               </Link>
 
-              <nav className="hidden md:flex items-center gap-8 bg-card/50 border border-border px-8 py-2.5 rounded-2xl">
+              <nav className="hidden md:flex items-center gap-8 glass px-8 py-2.5 rounded-2xl">
                 {[
                   { name: 'Home', href: '/' },
                   { name: 'Swap', href: '/swap' },
@@ -55,7 +55,7 @@ export default function RootLayout({
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="text-sm font-display font-bold text-muted hover:text-cyan transition-colors"
+                    className="text-sm font-display font-bold text-muted hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -73,20 +73,20 @@ export default function RootLayout({
           </main>
 
           {/* Mobile Bottom Nav */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0d0d1a]/90 backdrop-blur-xl border-t border-border px-6 py-4 flex justify-between items-center z-[100]">
-            <Link href="/" className="flex flex-col items-center gap-1 text-muted hover:text-cyan transition-all">
+          <nav className="md:hidden fixed bottom-0 left-0 right-0 glass-strong border-t border-green-100/50 px-6 py-4 flex justify-between items-center z-[100]">
+            <Link href="/" className="flex flex-col items-center gap-1 text-muted hover:text-primary transition-all">
               <HomeIcon size={20} />
               <span className="text-[10px] font-bold">Home</span>
             </Link>
-            <Link href="/swap" className="flex flex-col items-center gap-1 text-muted hover:text-cyan transition-all">
+            <Link href="/swap" className="flex flex-col items-center gap-1 text-muted hover:text-primary transition-all">
               <Repeat size={20} />
               <span className="text-[10px] font-bold">Swap</span>
             </Link>
-            <Link href="/liquidity" className="flex flex-col items-center gap-1 text-muted hover:text-cyan transition-all">
+            <Link href="/liquidity" className="flex flex-col items-center gap-1 text-muted hover:text-primary transition-all">
               <Droplets size={20} />
               <span className="text-[10px] font-bold">Liquidity</span>
             </Link>
-            <Link href="/pool" className="flex flex-col items-center gap-1 text-muted hover:text-cyan transition-all">
+            <Link href="/pool" className="flex flex-col items-center gap-1 text-muted hover:text-primary transition-all">
               <BarChart2 size={20} />
               <span className="text-[10px] font-bold">Pool</span>
             </Link>

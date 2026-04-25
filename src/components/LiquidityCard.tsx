@@ -22,22 +22,22 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
   const { refreshBalance } = useWallet();
   const [activeTab, setActiveTab] = useState<'add' | 'remove'>('add');
   const [xlmAmount, setXlmAmount] = useState('');
-  const [lqidAmount, setLqidAmount] = useState('');
+  const [gktAmount, setLqidAmount] = useState('');
   const [removePercent, setRemovePercent] = useState(50);
   const [isProcessing, setIsProcessing] = useState(false);
   const [txSteps, setTxSteps] = useState<TxStep[]>([]);
 
-  // Auto-calculate lqidAmount when xlmAmount changes to maintain pool ratio
+  // Auto-calculate gktAmount when xlmAmount changes to maintain pool ratio
   useEffect(() => {
     if (activeTab === 'add' && xlmAmount && poolStats && poolStats.xlmReserve > 0) {
       const xlm = parseFloat(xlmAmount);
-      const ratio = poolStats.lqidReserve / poolStats.xlmReserve;
+      const ratio = poolStats.gktReserve / poolStats.xlmReserve;
       setLqidAmount((xlm * ratio).toFixed(7));
     }
   }, [xlmAmount, poolStats, activeTab]);
 
   const handleAddLiquidity = async () => {
-    if (!xlmAmount || !lqidAmount || !userAddress || !poolStats) return;
+    if (!xlmAmount || !gktAmount || !userAddress || !poolStats) return;
 
     try {
       setIsProcessing(true);
@@ -50,13 +50,13 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
       setTxSteps(steps);
 
       const xlm = parseFloat(xlmAmount);
-      const lqid = parseFloat(lqidAmount);
-      const price = lqid / xlm;
+      const gkt = parseFloat(gktAmount);
+      const price = gkt / xlm;
       
       const xdr = await buildAddLiquidityXDR(
         userAddress,
         xlm.toFixed(7),
-        lqid.toFixed(7),
+        gkt.toFixed(7),
         (price * 0.99).toFixed(7), // min price
         (price * 1.01).toFixed(7)  // max price
       );
@@ -68,7 +68,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
       const txHash = await submitSignedXDR(signedXdr);
 
       // Calculate shares received
-      const shares = getLPShares(xlm, lqid, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.lqidReserve);
+      const shares = getLPShares(xlm, gkt, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.gktReserve);
 
       // Update DB
       await fetch('/api/liquidity', {
@@ -78,7 +78,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
           userAddress,
           action: 'add',
           xlmAmount: xlm,
-          lqidAmount: lqid,
+          gktAmount: gkt,
           lpShares: shares,
           txHash,
         }),
@@ -108,13 +108,13 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
       setTxSteps(steps);
 
       const sharesToRemove = (position.lpShares * removePercent) / 100;
-      const { xlm, lqid } = getPositionValue(sharesToRemove, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.lqidReserve);
+      const { xlm, gkt } = getPositionValue(sharesToRemove, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.gktReserve);
       
       const xdr = await buildRemoveLiquidityXDR(
         userAddress,
         sharesToRemove.toFixed(7),
         (xlm * 0.99).toFixed(7),
-        (lqid * 0.99).toFixed(7)
+        (gkt * 0.99).toFixed(7)
       );
       
       steps[0].status = 'done'; steps[1].status = 'active'; setTxSteps([...steps]);
@@ -131,7 +131,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
           userAddress,
           action: 'remove',
           xlmAmount: xlm,
-          lqidAmount: lqid,
+          gktAmount: gkt,
           lpShares: sharesToRemove,
           txHash,
         }),
@@ -147,16 +147,16 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
     }
   };
 
-  const removePreview = position && poolStats ? getPositionValue((position.lpShares * removePercent) / 100, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.lqidReserve) : { xlm: 0, lqid: 0 };
+  const removePreview = position && poolStats ? getPositionValue((position.lpShares * removePercent) / 100, poolStats.totalLPShares, poolStats.xlmReserve, poolStats.gktReserve) : { xlm: 0, gkt: 0 };
 
   return (
     <div className="space-y-6">
-      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-2xl">
-        <div className="flex bg-background border border-border p-1.5 rounded-2xl mb-8">
+      <div className="glass-strong p-8 rounded-[2.5rem] shadow-lg">
+        <div className="flex bg-green-50/50 border border-green-100 p-1.5 rounded-2xl mb-8">
           <button
             onClick={() => setActiveTab('add')}
             className={`flex-1 py-3 px-4 rounded-xl font-display font-bold text-sm transition-all ${
-              activeTab === 'add' ? 'bg-cyan text-background' : 'text-muted hover:text-white'
+              activeTab === 'add' ? 'bg-primary text-white' : 'text-muted hover:text-foreground'
             }`}
           >
             Add Liquidity
@@ -164,7 +164,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
           <button
             onClick={() => setActiveTab('remove')}
             className={`flex-1 py-3 px-4 rounded-xl font-display font-bold text-sm transition-all ${
-              activeTab === 'remove' ? 'bg-violet text-white' : 'text-muted hover:text-white'
+              activeTab === 'remove' ? 'bg-primary-dark text-white' : 'text-muted hover:text-foreground'
             }`}
           >
             Remove Liquidity
@@ -173,7 +173,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
 
         {activeTab === 'add' ? (
           <div className="space-y-4">
-            <div className="bg-background/50 border border-border p-5 rounded-3xl">
+            <div className="bg-green-50/40 border border-green-100 p-5 rounded-3xl">
               <label className="text-muted text-[10px] uppercase font-bold tracking-widest mb-2 block">XLM Amount</label>
               <div className="flex items-center gap-4">
                 <input
@@ -181,11 +181,11 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
                   value={xlmAmount}
                   onChange={(e) => setXlmAmount(e.target.value)}
                   placeholder="0.00"
-                  className="bg-transparent text-2xl font-mono text-white w-full focus:outline-none"
+                  className="bg-transparent text-2xl font-mono text-foreground w-full focus:outline-none"
                 />
-                <div className="flex items-center gap-2 bg-cyan/10 border border-cyan/20 px-3 py-1.5 rounded-xl">
-                  <div className="w-5 h-5 rounded-full bg-cyan" />
-                  <span className="text-sm font-display font-bold text-cyan">XLM</span>
+                <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-xl">
+                  <div className="w-5 h-5 rounded-full bg-primary" />
+                  <span className="text-sm font-display font-bold text-primary">XLM</span>
                 </div>
               </div>
             </div>
@@ -194,13 +194,13 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
               <Plus className="text-muted" size={20} />
             </div>
 
-            <div className="bg-background/50 border border-border p-5 rounded-3xl">
-              <label className="text-muted text-[10px] uppercase font-bold tracking-widest mb-2 block">LQID Amount (Calculated)</label>
+            <div className="bg-green-50/40 border border-green-100 p-5 rounded-3xl">
+              <label className="text-muted text-[10px] uppercase font-bold tracking-widest mb-2 block">GKT Amount (Calculated)</label>
               <div className="flex items-center gap-4">
-                <div className="text-2xl font-mono text-white/50 w-full">{lqidAmount || '0.00'}</div>
-                <div className="flex items-center gap-2 bg-violet/10 border border-violet/20 px-3 py-1.5 rounded-xl">
-                  <div className="w-5 h-5 rounded-full bg-violet" />
-                  <span className="text-sm font-display font-bold text-violet">LQID</span>
+                <div className="text-2xl font-mono text-foreground/50 w-full">{gktAmount || '0.00'}</div>
+                <div className="flex items-center gap-2 bg-primary-dark/10 border border-primary-dark/20 px-3 py-1.5 rounded-xl">
+                  <div className="w-5 h-5 rounded-full bg-primary-dark" />
+                  <span className="text-sm font-display font-bold text-primary-dark">GKT</span>
                 </div>
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
             <button
               onClick={handleAddLiquidity}
               disabled={!xlmAmount || !userAddress || isProcessing}
-              className="w-full mt-4 py-4 bg-cyan text-background font-display font-black text-lg rounded-2xl hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all flex items-center justify-center gap-2"
+              className="w-full mt-4 py-4 bg-primary text-white font-display font-black text-lg rounded-2xl hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all flex items-center justify-center gap-2"
             >
               <Droplets size={20} />
               Supply Liquidity
@@ -217,15 +217,15 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
         ) : (
           <div className="space-y-6">
             {!position || position.lpShares === 0 ? (
-              <div className="text-center py-12 px-6 bg-background/50 border border-dashed border-border rounded-3xl">
+              <div className="text-center py-12 px-6 bg-green-50/30 border border-dashed border-green-200 rounded-3xl">
                 <p className="text-muted text-sm font-medium">No active LP position found.</p>
               </div>
             ) : (
               <>
-                <div className="bg-background/50 border border-border p-6 rounded-3xl">
+                <div className="bg-green-50/40 border border-green-100 p-6 rounded-3xl">
                   <div className="flex justify-between items-center mb-6">
-                    <span className="text-white font-display font-bold">Remove Amount</span>
-                    <span className="text-violet font-mono font-bold text-xl">{removePercent}%</span>
+                    <span className="text-foreground font-display font-bold">Remove Amount</span>
+                    <span className="text-primary-dark font-mono font-bold text-xl">{removePercent}%</span>
                   </div>
                   <input
                     type="range"
@@ -233,14 +233,14 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
                     max="100"
                     value={removePercent}
                     onChange={(e) => setRemovePercent(parseInt(e.target.value))}
-                    className="w-full h-2 bg-border rounded-lg appearance-none cursor-pointer accent-violet"
+                    className="w-full h-2 bg-green-100 rounded-lg appearance-none cursor-pointer accent-primary-dark"
                   />
                   <div className="flex justify-between mt-4">
                     {[25, 50, 75, 100].map(p => (
                       <button
                         key={p}
                         onClick={() => setRemovePercent(p)}
-                        className={`text-[10px] font-mono px-3 py-1 rounded-full border border-border hover:bg-white/5 transition-all ${removePercent === p ? 'bg-violet/20 border-violet/40 text-violet' : 'text-muted'}`}
+                        className={`text-[10px] font-mono px-3 py-1 rounded-full border border-green-100 hover:bg-green-50/50 transition-all ${removePercent === p ? 'bg-primary-dark/10 border-primary-dark/30 text-primary-dark' : 'text-muted'}`}
                       >
                         {p}%
                       </button>
@@ -248,12 +248,12 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
                   </div>
                 </div>
 
-                <div className="p-5 bg-violet/5 border border-violet/20 rounded-3xl">
+                <div className="p-5 bg-primary-dark/5 border border-primary-dark/15 rounded-3xl">
                   <p className="text-muted text-[10px] uppercase font-bold tracking-widest mb-4">You will receive</p>
                   <div className="space-y-3">
                     <div className="flex justify-between font-mono">
-                      <span className="text-white">{formatToken(removePreview.xlm)} XLM</span>
-                      <span className="text-white">{formatToken(removePreview.lqid)} LQID</span>
+                      <span className="text-foreground">{formatToken(removePreview.xlm)} XLM</span>
+                      <span className="text-foreground">{formatToken(removePreview.gkt)} GKT</span>
                     </div>
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export default function LiquidityCard({ userAddress, poolStats, position }: Liqu
                 <button
                   onClick={handleRemoveLiquidity}
                   disabled={isProcessing}
-                  className="w-full py-4 bg-violet text-white font-display font-black text-lg rounded-2xl hover:shadow-[0_0_30px_rgba(124,58,237,0.3)] transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-primary-dark text-white font-display font-black text-lg rounded-2xl hover:shadow-[0_0_30px_rgba(22,163,74,0.2)] transition-all flex items-center justify-center gap-2"
                 >
                   <Minus size={20} />
                   Withdraw Liquidity

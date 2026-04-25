@@ -12,9 +12,9 @@ interface SwapHistoryProps {
 
 export default function SwapHistory({ swaps }: SwapHistoryProps) {
   return (
-    <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-2xl">
-      <div className="p-8 border-b border-border flex justify-between items-center">
-        <h3 className="text-white font-display font-black text-xl uppercase tracking-tight">Recent Activity</h3>
+    <div className="glass-strong rounded-[2.5rem] overflow-hidden shadow-lg">
+      <div className="p-8 border-b border-green-100/50 flex justify-between items-center">
+        <h3 className="text-foreground font-display font-black text-xl uppercase tracking-tight">Recent Activity</h3>
         <div className="flex items-center gap-2 text-muted text-[10px] font-mono">
           <Clock size={12} />
           <span>Real-time updates enabled</span>
@@ -24,7 +24,7 @@ export default function SwapHistory({ swaps }: SwapHistoryProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-background/30">
+            <tr className="bg-green-50/30">
               <th className="px-8 py-4 text-[10px] font-bold text-muted uppercase tracking-[0.2em]">User</th>
               <th className="px-8 py-4 text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Transaction</th>
               <th className="px-8 py-4 text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Impact</th>
@@ -32,18 +32,18 @@ export default function SwapHistory({ swaps }: SwapHistoryProps) {
               <th className="px-8 py-4 text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Explorer</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/50">
+          <tbody className="divide-y divide-green-100/50">
             {swaps.map((swap) => (
-              <tr key={swap.txHash} className="hover:bg-white/[0.02] transition-colors group">
+              <tr key={swap.txHash} className="hover:bg-green-50/30 transition-colors group">
                 <td className="px-8 py-6">
-                  <span className="text-white font-mono text-xs">{truncateAddress(swap.userAddress)}</span>
+                  <span className="text-foreground font-mono text-xs">{truncateAddress(swap.userAddress)}</span>
                 </td>
                 <td className="px-8 py-6">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-cyan font-mono font-bold text-xs">{formatToken(swap.fromAmount)} {swap.fromToken}</span>
+                      <span className="text-primary font-mono font-bold text-xs">{formatToken(swap.fromAmount)} {swap.fromToken}</span>
                       <ArrowRight size={12} className="text-muted" />
-                      <span className="text-violet font-mono font-bold text-xs">{formatToken(swap.toAmount)} {swap.toToken}</span>
+                      <span className="text-primary-dark font-mono font-bold text-xs">{formatToken(swap.toAmount)} {swap.toToken}</span>
                     </div>
                   </div>
                 </td>
@@ -60,7 +60,7 @@ export default function SwapHistory({ swaps }: SwapHistoryProps) {
                     href={stellarExpertTx(swap.txHash)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 p-2 bg-background border border-border rounded-lg text-muted hover:text-cyan hover:border-cyan transition-all group-hover:shadow-[0_0_15px_rgba(0,212,255,0.1)]"
+                    className="inline-flex items-center gap-2 p-2 bg-green-50/50 border border-green-100 rounded-lg text-muted hover:text-primary hover:border-primary/30 transition-all group-hover:shadow-sm"
                   >
                     <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">Details</span>
                     <ExternalLink size={14} />

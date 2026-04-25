@@ -28,7 +28,7 @@ export default function SlippageSettings({ value, onChange }: SlippageSettingsPr
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-muted hover:text-white bg-background border border-border rounded-lg transition-all"
+        className="p-2 text-muted hover:text-foreground bg-green-50/50 border border-green-100 rounded-lg transition-all"
         title="Slippage Settings"
       >
         <Settings2 size={18} />
@@ -37,8 +37,8 @@ export default function SlippageSettings({ value, onChange }: SlippageSettingsPr
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute top-full right-0 mt-2 w-64 bg-card border border-border p-4 rounded-2xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200">
-            <h4 className="text-white font-display font-bold mb-3 text-sm">Slippage Tolerance</h4>
+          <div className="absolute top-full right-0 mt-2 w-64 glass-strong p-4 rounded-2xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200">
+            <h4 className="text-foreground font-display font-bold mb-3 text-sm">Slippage Tolerance</h4>
             
             <div className="flex gap-2 mb-4">
               {options.map((opt) => (
@@ -49,7 +49,7 @@ export default function SlippageSettings({ value, onChange }: SlippageSettingsPr
                     setCustomValue(opt.toString());
                   }}
                   className={`flex-1 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                    value === opt ? 'bg-cyan text-background font-bold' : 'bg-background text-muted border border-border hover:border-muted'
+                    value === opt ? 'bg-primary text-white font-bold' : 'bg-green-50/50 text-muted border border-green-100 hover:border-primary/30'
                   }`}
                 >
                   {opt}%
@@ -63,7 +63,7 @@ export default function SlippageSettings({ value, onChange }: SlippageSettingsPr
                   type="number"
                   value={customValue}
                   onChange={handleCustomChange}
-                  className="w-full bg-background border border-border rounded-lg py-2 pl-3 pr-8 text-sm text-white font-mono focus:outline-none focus:border-cyan transition-all"
+                  className="w-full bg-green-50/30 border border-green-100 rounded-lg py-2 pl-3 pr-8 text-sm text-foreground font-mono focus:outline-none focus:border-primary transition-all"
                   placeholder="Custom"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs">%</span>
